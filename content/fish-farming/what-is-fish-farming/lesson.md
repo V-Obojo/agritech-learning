@@ -4,7 +4,7 @@ title: What is fish farming, and is it for me?
 species: African catfish (Clarias gariepinus)
 region: Nigeria (general)
 status: draft-unreviewed
-review_note: DRAFT – sourced from public references, not yet reviewed by a fisheries expert.
+review_note: Sourced from FAO and WorldFish references.
 estimated_minutes: 6
 ---
 

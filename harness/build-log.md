@@ -16,6 +16,13 @@ Observed progress and verification evidence. **Append-only**: add corrections as
 | 6 Multi-topic model | Complete | 2026-10-14 | 2026-10-14 | `npm run verify`: 177/177 unit tests; production build passed; hardcoded-name search matches tests only | none |
 | 7 Navigation UI | Complete | 2026-10-14 | 2026-10-14 | `npm run verify`: 186 tests, 44/44 static generation; both 375px mock topic journeys passed | none |
 | 8 Journey E2E | Complete | 2026-10-14 | 2026-10-14 | 7/7 E2E specs; `npm run verify`: 199 unit tests and successful production build | none |
+| V v2 prep | Complete | 2026-10-14 | 2026-10-14 | content integrity clean; deps installed | none |
+| 9 Design system | Not started | | | | |
+| 10 Auth + DB | Not started | | | | |
+| 11 Dashboard | Not started | | | | |
+| 12 Media + 3D | Not started | | | | |
+| 13 Simulators | Not started | | | | |
+| 14 Polish + E2E | Not started | | | | |
 
 ## Entry template
 
@@ -167,3 +174,12 @@ Observed progress and verification evidence. **Append-only**: add corrections as
 - Blockers / questions for human: none.
 - Final PLANS.md statuses: Setup, restructure prep and Phases 1–8 Complete. The human Live smoke test, then GitHub push row remains Not started.
 - Next action: stop. The human handles the live smoke test and push with approval.
+
+### 2026-10-14 — Step V — v2 prep (by Claude)
+- Baseline commit `3dbd381` pushed to https://github.com/V-Obojo/agritech-learning (public).
+- Libraries installed (approved): next-auth@4, bcryptjs, drizzle-orm, @libsql/client, three, @react-three/fiber, @react-three/drei, motion, recharts, react-is; dev: drizzle-kit, @types/three, @types/bcryptjs. Scripts db:generate/db:migrate/db:studio; `.env.example` gains NEXTAUTH_SECRET, NEXTAUTH_URL, DATABASE_URL, DATABASE_AUTH_TOKEN; `/data/` gitignored. npm blocked postinstall for esbuild/unrs-resolver (allowScripts); drizzle-kit still runs.
+- Media: 10 Wikimedia Commons images (CC0 / CC BY-SA / public domain), 1280px, 3.7 MB in `public/media/`, each visually checked; `content/media.json` with alt/caption/credit/license. Dropped "Earthen_Fishpond.jpg" (overgrown, unfed pond — misleading).
+- Content: new live topics `meet-the-catfish` (7 `mc-` chunks; FAO TP362 anatomy + nursing) and `setup-options` (7 `so-` chunks; FAO handbook ch.2–3, WorldFish, Commons photo pages); `::figure`/`::lab` directives added; water lesson gains water-source-sim + spot-the-signs; `labs.json` (4 labs), `badges.json` (16 badges), `catalog.product.supportContact`; review notes neutralised (not shown in UI).
+- 3D: no Clarias model available under open licence/downloadable without login → Phase 12 builds a procedural model from FAO anatomy.
+- Verification: node integrity script → 4 live topics (8/7/10/7 chunks), media 10 (files exist), labs 4, badges 16, sources 13, problems [].
+- Expected breakage: tests assuming 2 live topics; Phase 9 updates them.

@@ -1,0 +1,21 @@
+{
+  "note": "Badges are computed from progress and events. Rule types: topic-complete, lab-complete, streak, guide-questions, all-paths-tried, chose-pause, first-topic-started, night-session, all-live-topics.",
+  "badges": [
+    { "id": "first-steps", "label": "First Steps", "description": "Started your first topic.", "emoji": "🌱", "rule": { "type": "first-topic-started" } },
+    { "id": "big-picture", "label": "Big Picture", "description": "Finished 'What is fish farming, and is it for me?'.", "emoji": "🧭", "rule": { "type": "topic-complete", "subjectId": "fish-farming", "topicId": "what-is-fish-farming" } },
+    { "id": "catfish-friend", "label": "Catfish Friend", "description": "Finished 'Meet the African catfish'.", "emoji": "🐟", "rule": { "type": "topic-complete", "subjectId": "fish-farming", "topicId": "meet-the-catfish" } },
+    { "id": "water-wise", "label": "Water Wise", "description": "Finished 'Water: do I have enough?'.", "emoji": "💧", "rule": { "type": "topic-complete", "subjectId": "fish-farming", "topicId": "water" } },
+    { "id": "site-scout", "label": "Site Scout", "description": "Finished 'Space and setup options'.", "emoji": "📐", "rule": { "type": "topic-complete", "subjectId": "fish-farming", "topicId": "setup-options" } },
+    { "id": "path-pioneer", "label": "Path Pioneer", "description": "Finished every live fish farming topic.", "emoji": "🏆", "rule": { "type": "all-live-topics", "subjectId": "fish-farming" } },
+    { "id": "catfish-explorer", "label": "Catfish Explorer", "description": "Explored the 3D catfish.", "emoji": "🔍", "rule": { "type": "lab-complete", "labId": "catfish-3d" } },
+    { "id": "water-wise-lab", "label": "Flow Finder", "description": "Completed the water-source simulator.", "emoji": "🌊", "rule": { "type": "lab-complete", "labId": "water-source-sim" } },
+    { "id": "pond-planner", "label": "Pond Planner", "description": "Completed the pond builder challenges.", "emoji": "🏗️", "rule": { "type": "lab-complete", "labId": "pond-builder" } },
+    { "id": "sharp-eye", "label": "Sharp Eye", "description": "Spotted the warning signs in every pond scene.", "emoji": "👀", "rule": { "type": "lab-complete", "labId": "spot-the-signs" } },
+    { "id": "streak-3", "label": "On a Roll", "description": "Learned on 3 days in a row.", "emoji": "🔥", "rule": { "type": "streak", "days": 3 } },
+    { "id": "streak-7", "label": "Week Warrior", "description": "Learned on 7 days in a row.", "emoji": "⚡", "rule": { "type": "streak", "days": 7 } },
+    { "id": "curious-mind", "label": "Curious Mind", "description": "Asked the guide 5 questions.", "emoji": "❓", "rule": { "type": "guide-questions", "count": 5 } },
+    { "id": "path-tester", "label": "Every Angle", "description": "Tried every activity path in a topic.", "emoji": "🔀", "rule": { "type": "all-paths-tried" } },
+    { "id": "honest-explorer", "label": "Honest Explorer", "description": "Chose to pause or said 'not now'. Deciding is learning too.", "emoji": "🤝", "rule": { "type": "chose-pause" } },
+    { "id": "night-owl", "label": "Night Owl", "description": "Learned after 9 pm.", "emoji": "🦉", "rule": { "type": "night-session", "afterHour": 21 } }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "meet-the-catfish-activity",
+  "lesson": "meet-the-catfish",
+  "status": "draft-unreviewed",
+  "title": "Explain the catfish",
+  "intro": "Pick one option. Both count as completing the activity.",
+  "paths": [
+    {
+      "id": "explain",
+      "label": "Explain the catfish to a friend",
+      "prompt": "Imagine a friend has never seen an African catfish. In a few sentences, describe what it looks like and one thing that makes it a good farm fish. Use what you saw in the 3D model and photos.",
+      "example": "It has a long, eel-like body with smooth skin and no scales, a flat head and four pairs of whiskers called barbels that help it find food. Its back fin runs almost to the tail. It can breathe air, which makes it hardy."
+    },
+    {
+      "id": "fictional",
+      "label": "Help someone choose fingerlings",
+      "prompt": "Read Bisi's question. What would you tell her about fingerling sizes, and what should she ask the seller?",
+      "scenario": "Bisi (fictional) is buying her first catfish fingerlings. At the hatchery she sees one batch where all the fish look about the same small size, and another, cheaper batch with a mix of tiny and much bigger fingerlings together. She asks you which batch makes more sense and why.",
+      "modelPoints": [
+        { "point": "Mixed sizes are risky because larger fingerlings can eat smaller ones (cannibalism).", "criterion": "fingerling-size", "chunks": ["mc-06"] },
+        { "point": "In FAO's trials most fingerlings were about 2–3 g and a minority 8–10 g after four to five weeks, so size differences are normal and need managing.", "criterion": "fingerling-size", "chunks": ["mc-05"] },
+        { "point": "Cheaper isn't better if many fish are lost; she should ask how the batch was graded.", "criterion": "practical", "chunks": ["mc-06", "mc-07"] },
+        { "point": "She can ask the seller about the age and size of the fingerlings and whether sizes were sorted.", "criterion": "question", "chunks": ["mc-05"] }
+      ]
+    }
+  ],
+  "rubric": [
+    { "id": "body-shape", "description": "Describes the long, eel-like body, smooth scaleless skin or flat head.", "chunks": ["mc-02", "mc-03"], "keywords": ["long", "eel", "smooth", "scale", "scaleless", "flat", "head", "skin", "cylindrical"] },
+    { "id": "barbels-fins", "description": "Mentions the barbels or the long dorsal/anal fins.", "chunks": ["mc-02", "mc-03"], "keywords": ["barbel", "barbels", "whisker", "feeler", "fin", "fins", "dorsal", "spine"] },
+    { "id": "air-breathing", "description": "Explains that catfish can breathe air, making them hardy.", "chunks": ["mc-04", "mc-07"], "keywords": ["air", "breathe", "breathing", "oxygen", "hardy", "tough", "survive"] },
+    { "id": "fingerling-size", "description": "Shows understanding of fingerlings and why size differences matter.", "chunks": ["mc-05", "mc-06"], "keywords": ["fingerling", "fingerlings", "size", "sizes", "grams", "small", "big", "bigger", "cannibal", "eat"] },
+    { "id": "practical", "description": "Connects the fish's traits to practical farming choices.", "chunks": ["mc-07"], "keywords": ["farm", "farmer", "choose", "buy", "cheap", "cost", "feed", "demand", "market"] },
+    { "id": "question", "description": "Names a sensible question to ask or something still to find out.", "chunks": ["mc-05", "mc-07"], "keywords": ["?", "ask", "find out", "not sure", "seller", "hatchery", "check"] }
+  ],
+  "feedbackRules": [
+    "Be supportive and specific; reference lesson chunk ids.",
+    "Start with one thing done well (cite a rubric criterion).",
+    "Then one or two things to think about next (cite criterion and chunk).",
+    "End with a suggested next step taken from topic.json nextSteps.",
+    "Never give stocking numbers, doses or prices that are not in the lesson."
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "status": "draft-unreviewed",
+  "welcome": {
+    "curious": "Let's meet the fish itself. Spin it, zoom in, and find out what makes it so hardy.",
+    "considering": "If you might farm catfish, knowing the fish and its fingerlings helps you buy and care for them wisely.",
+    "student": "Here's the practical anatomy and early life of Clarias gariepinus, with FAO sources."
+  },
+  "starterQuestions": [
+    "How many barbels does an African catfish have?",
+    "How can catfish breathe air?",
+    "What are fingerlings?"
+  ],
+  "synonyms": {
+    "whiskers": "barbels",
+    "feelers": "barbels",
+    "juveniles": "fingerlings",
+    "baby fish": "fingerlings",
+    "young fish": "fingerlings",
+    "lungs": "air-breathing organ",
+    "breathe air": "air-breathing"
+  },
+  "understandingCheck": [
+    {
+      "id": "uc-1",
+      "question": "How many pairs of barbels does the African catfish have?",
+      "options": ["Two pairs", "Four pairs", "Six pairs"],
+      "answerIndex": 1,
+      "chunk": "mc-02"
+    },
+    {
+      "id": "uc-2",
+      "question": "What does the catfish's extra breathing organ let it do?",
+      "options": ["Take oxygen straight from the air", "Live without any water forever", "Breathe through its fins"],
+      "answerIndex": 0,
+      "chunk": "mc-04"
+    },
+    {
+      "id": "uc-3",
+      "question": "Why do farmers pay attention to fingerling size?",
+      "options": ["Bigger fingerlings are always cheaper", "Larger fingerlings can eat smaller ones", "Small fingerlings cannot swim"],
+      "answerIndex": 1,
+      "chunk": "mc-06"
+    }
+  ],
+  "stuckHints": {
+    "lesson": "Try the 3D catfish in mc-02: tap each glowing point to see what that body part does.",
+    "activity-explain": "Pick three body parts from the lesson (for example barbels, long fins, smooth skin) and write one sentence about each.",
+    "activity-fictional": "Re-read Bisi's question and look at mc-05 and mc-06: what do they say about fingerling sizes?",
+    "guide": "Try asking about one body part at a time, for example: 'What are barbels for?'"
+  },
+  "nextSteps": [
+    { "id": "continue-water", "label": "Continue the path: check whether you could have enough water (topic 3)", "chunks": ["mc-04", "mc-07"] },
+    { "id": "visit-farm", "label": "Ask a local catfish farmer if you can see their fish and fingerlings up close", "chunks": ["mc-05"] },
+    { "id": "ask-hatchery", "label": "Find out where fingerlings are sold near you and what sizes they offer", "chunks": ["mc-05", "mc-06"] },
+    { "id": "pause", "label": "Pause here. You now know the fish, and you can come back any time", "chunks": [] }
+  ],
+  "defaultNextStep": { "considering": "ask-hatchery", "default": "continue-water" },
+  "unsupportedFallback": {
+    "message": "This topic doesn't cover that yet, so I can't give you a reliable answer.",
+    "nextStep": "visit-farm"
+  },
+  "reminder": {
+    "optional": true,
+    "demoOnly": true,
+    "label": "Remind me to continue the fish farming path in a week",
+    "preview": "Hi! Last week you met the African catfish. Ready to check whether you could have enough water?"
+  }
+}

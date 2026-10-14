@@ -1,0 +1,125 @@
+{
+  "note": "Openly licensed media from Wikimedia Commons, downloaded 2026-10-14 at 1280px. Credit must be shown with each image and on /credits.",
+  "media": [
+    {
+      "id": "catfish-adult-side",
+      "file": "/media/catfish-adult-side.jpg",
+      "width": 1280,
+      "height": 591,
+      "alt": "An adult African catfish lying on a concrete surface, showing its long body, long dorsal fin and barbels",
+      "caption": "An adult African catfish (Clarias gariepinus). Notice the long, eel-like body and the fin running along most of its back.",
+      "credit": "Zahara5555",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Clarias_gariepinus,_African_sharptooth_catfish.jpg"
+    },
+    {
+      "id": "catfish-adult-photo",
+      "file": "/media/catfish-adult-photo.jpg",
+      "width": 1280,
+      "height": 983,
+      "alt": "Close-up from above of an African catfish head with long barbels around the mouth",
+      "caption": "The flattened head and barbels (whisker-like feelers) of an African catfish, photographed in Indonesia, where the species is also farmed.",
+      "credit": "W.A. Djatmiko (Wie146)",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Clarias_garie_080516_9166_H_tdp.jpg"
+    },
+    {
+      "id": "catfish-drawing",
+      "file": "/media/catfish-drawing.jpg",
+      "width": 1280,
+      "height": 428,
+      "alt": "Historical colour drawing of an African catfish seen from the side and slightly above",
+      "caption": "A 19th-century scientific drawing of the African catfish. Drawings like this make body parts easy to see.",
+      "credit": "Illustrations of the Zoology of South Africa (author unknown)",
+      "license": "Public domain",
+      "licenseUrl": null,
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Clarias_gariepinus.jpg"
+    },
+    {
+      "id": "catfish-young",
+      "file": "/media/catfish-young.jpg",
+      "width": 1280,
+      "height": 1058,
+      "alt": "Several young dark African catfish wriggling on wet ground",
+      "caption": "Young African catfish. These were wild fish, not farmed fingerlings, but they show the shape of young catfish.",
+      "credit": "plegadis",
+      "license": "Public domain",
+      "licenseUrl": null,
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Young_Catfish.jpg"
+    },
+    {
+      "id": "pond-ilorin",
+      "file": "/media/pond-ilorin.jpg",
+      "width": 1280,
+      "height": 854,
+      "alt": "A lined fish pond with netting over it and fish rippling the surface, beside a grassy bank in Ilorin",
+      "caption": "A fish pond near the Asa dam in Egbejila, Ilorin, Nigeria, covered with netting.",
+      "credit": "Habeebchomsky",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:A_fish_pond_close_to_Asa_dam_river_around_Egbejila,Ilorin.jpg"
+    },
+    {
+      "id": "tank-concrete",
+      "file": "/media/tank-concrete.jpg",
+      "width": 1280,
+      "height": 1707,
+      "alt": "Looking down into a tiled concrete tank full of catfish swimming in green water with floating feed",
+      "caption": "A concrete fish tank with catfish feeding.",
+      "credit": "Judethedeus",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Concrete_fish_pond.jpg"
+    },
+    {
+      "id": "tank-tarpaulin",
+      "file": "/media/tank-tarpaulin.jpg",
+      "width": 1280,
+      "height": 1707,
+      "alt": "Close-up of a tarpaulin fish tank filled with greenish water reflecting the sky",
+      "caption": "Inside a tarpaulin fish tank.",
+      "credit": "Judethedeus",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tarpaulin_Fish_pond.jpg"
+    },
+    {
+      "id": "ponds-makeshift",
+      "file": "/media/ponds-makeshift.jpg",
+      "width": 1280,
+      "height": 960,
+      "alt": "Two tarpaulin fish tanks on metal frames in a walled backyard with banana plants",
+      "caption": "Two tarpaulin (collapsible) fish tanks set up in a backyard.",
+      "credit": "Iwuala Lucy",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Makeshift_Fish_ponds.jpg"
+    },
+    {
+      "id": "water-borehole-oyo",
+      "file": "/media/water-borehole-oyo.jpg",
+      "width": 1280,
+      "height": 960,
+      "alt": "A hand-operated borehole pump on a concrete platform surrounded by grass",
+      "caption": "A hand-operated borehole pump in Irawo, Atisbo LGA, Oyo State, Nigeria.",
+      "credit": "NigerianScribe",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hand-operated_borehole_water_pump_in_Irawo,_Atisbo_Local_Government_Area,_Oyo_State,_Nigeria.jpg"
+    },
+    {
+      "id": "water-well-ilorin",
+      "file": "/media/water-well-ilorin.jpg",
+      "width": 1280,
+      "height": 1707,
+      "alt": "A covered, padlocked hand-dug well with a concrete ring in a shaded compound",
+      "caption": "A covered hand-dug well in Ilorin, Nigeria.",
+      "credit": "Timmylegend",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nigerian_well_in_Ilorin_city.jpg"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "status": "draft-unreviewed",
+  "note": "Interactive lab definitions. Every fact shown in a lab must cite a lesson chunk. Simulator numbers are illustrative and must be labelled as an example.",
+  "labs": [
+    {
+      "id": "catfish-3d",
+      "type": "model-viewer",
+      "title": "Explore the African catfish in 3D",
+      "teaser": "Spin, zoom and tap a 3D African catfish to discover its barbels, long fins and air-breathing organ.",
+      "subjectId": "fish-farming",
+      "topicId": "meet-the-catfish",
+      "badge": "catfish-explorer",
+      "instructions": "Drag to spin the fish, scroll or pinch to zoom, and tap the glowing points. Switch between fingerling and adult to compare.",
+      "model": {
+        "kind": "procedural",
+        "species": "Clarias gariepinus",
+        "bodyColors": { "back": "#4a5240", "side": "#6b7158", "belly": "#d9d4c4" },
+        "notes": "Eel-like cylindrical body; flattened bony head; four pairs of barbels (nasal, maxillary = longest, inner and outer mandibular); very long dorsal and anal fins reaching nearly to the tail; pectoral fins with a spine as first ray; smooth scaleless skin, marbled dark above and light below. Proportions are approximate and not to scale."
+      },
+      "modes": [
+        { "id": "adult", "label": "Adult", "note": "An adult African catfish. Proportions are approximate." },
+        { "id": "fingerling", "label": "Fingerling", "note": "In FAO nursery trials, most fingerlings were about 2–3 g and a minority 8–10 g after four to five weeks (mc-05). Shown larger than life so you can see it.", "chunk": "mc-05" }
+      ],
+      "hotspots": [
+        { "id": "barbel-maxillary", "part": "barbel-maxillary", "label": "Upper-jaw barbels", "text": "The longest and most mobile pair of barbels. Barbels mainly help the fish find food.", "chunk": "mc-02" },
+        { "id": "barbel-nasal", "part": "barbel-nasal", "label": "Nasal barbels", "text": "One of the four pairs of barbels, near the nostrils.", "chunk": "mc-02" },
+        { "id": "barbel-mandibular", "part": "barbel-mandibular", "label": "Lower-jaw barbels", "text": "Two pairs of barbels (inner and outer) under the lower jaw.", "chunk": "mc-02" },
+        { "id": "head", "part": "head", "label": "Flat, bony head", "text": "The head is flattened and heavily boned.", "chunk": "mc-02" },
+        { "id": "dorsal-fin", "part": "dorsal-fin", "label": "Long dorsal fin", "text": "The fin along the back is very long, reaching nearly to the tail, and has only soft rays.", "chunk": "mc-03" },
+        { "id": "anal-fin", "part": "anal-fin", "label": "Long anal fin", "text": "The fin underneath is also very long and soft-rayed.", "chunk": "mc-03" },
+        { "id": "pectoral-spine", "part": "pectoral-fin", "label": "Side fin spine", "text": "The first ray of each side (pectoral) fin is a stiff spine.", "chunk": "mc-03" },
+        { "id": "skin", "part": "body", "label": "Smooth, scaleless skin", "text": "The skin has no scales. It is dark and marbled on the back and sides, lighter underneath.", "chunk": "mc-03" },
+        { "id": "air-organ", "part": "gill-area", "label": "Air-breathing organ", "text": "Behind the gills, tree-like structures in air chambers take oxygen straight from the air.", "chunk": "mc-04" }
+      ],
+      "completion": { "hotspotsVisited": 5, "modesViewed": 2 }
+    },
+    {
+      "id": "water-source-sim",
+      "type": "water-simulator",
+      "title": "Water-source simulator",
+      "teaser": "Pick a water source, slide through the year and watch whether your pond stays full through the dry months.",
+      "subjectId": "fish-farming",
+      "topicId": "water",
+      "badge": "water-wise-lab",
+      "instructions": "Choose a water source, then drag the slider through the year. Watch the source level against what the pond needs.",
+      "exampleNote": "Example scenario with made-up numbers for a fictional place. Real water levels depend on your location and season (wa-08).",
+      "place": "Example town (fictional)",
+      "months": [
+        { "label": "Month 1", "season": "dry" }, { "label": "Month 2", "season": "dry" }, { "label": "Month 3", "season": "dry" },
+        { "label": "Month 4", "season": "wet" }, { "label": "Month 5", "season": "wet" }, { "label": "Month 6", "season": "wet" },
+        { "label": "Month 7", "season": "wet" }, { "label": "Month 8", "season": "wet" }, { "label": "Month 9", "season": "wet" },
+        { "label": "Month 10", "season": "wet" }, { "label": "Month 11", "season": "dry" }, { "label": "Month 12", "season": "dry" }
+      ],
+      "pondNeed": { "wet": 60, "dry": 100, "unit": "example units of water per month", "note": "A pond needs water to fill it and to top it up; it needs more top-ups when it's dry (wa-03)." },
+      "sources": [
+        { "id": "shared-well", "label": "Shared hand-dug well", "media": "water-well-ilorin", "levels": [55, 40, 35, 80, 110, 130, 140, 140, 130, 115, 85, 65], "note": "In this example the well drops in the dry months, and other households use it too.", "chunks": ["wa-03", "wa-09"] },
+        { "id": "borehole", "label": "Borehole", "media": "water-borehole-oyo", "levels": [105, 100, 100, 110, 115, 120, 120, 120, 120, 115, 110, 105], "note": "In this example the borehole stays fairly steady. Remember borehole water can differ in quality, so testing matters.", "chunks": ["wa-04", "wa-05"] },
+        { "id": "stream", "label": "Stream below the plot", "levels": [30, 15, 20, 90, 130, 150, 150, 150, 140, 120, 70, 45], "note": "In this example the stream shrinks in the dry months. It is lower than the pond, so water can't flow in by gravity, and it may carry wild fish.", "chunks": ["wa-03", "wa-04"] },
+        { "id": "rain-only", "label": "Rain only", "levels": [0, 0, 10, 70, 110, 120, 130, 130, 110, 80, 10, 0], "note": "Rain alone is not a reliable way to keep a pond full: dry periods leave it too low.", "chunks": ["wa-03"] }
+      ],
+      "questions": [
+        { "id": "q-best", "prompt": "In this example, which source keeps up with the pond's needs all year?", "answer": "borehole", "explain": "Only the borehole stays above the pond's needs every month in this example. Check real sources in the driest months (wa-03).", "chunk": "wa-03" },
+        { "id": "q-worst-month", "prompt": "For the shared well, in which kind of month is the shortfall biggest?", "answer": "dry", "explain": "The gap is biggest in the dry months, which is why the key question is whether water lasts through the driest part of the year (wa-03).", "chunk": "wa-03" }
+      ],
+      "completion": { "sourcesExplored": 3, "questionsAnswered": 2 }
+    },
+    {
+      "id": "pond-builder",
+      "type": "pond-builder",
+      "title": "Pond builder",
+      "teaser": "Drag to size a pond with a measuring tape, set the depth and watch the area and volume update live.",
+      "subjectId": "fish-farming",
+      "topicId": "setup-options",
+      "badge": "pond-planner",
+      "instructions": "Drag the corner handles or type sizes. Use the depth stick to set depth. The tape shows each side in metres.",
+      "limits": { "minSide": 2, "maxSide": 50, "step": 0.5, "minDepth": 0.3, "maxDepth": 2, "depthStep": 0.05 },
+      "defaults": { "length": 10, "width": 8, "depth": 1 },
+      "math": "area = length × width (m²); volume = area × average depth (m³); litres = m³ × 1000. This is a simplified box shape; real ponds have sloping banks.",
+      "references": [
+        { "id": "fao-min-area", "label": "FAO suggests a first pond larger than 300 m²", "value": 300, "unit": "m²", "chunk": "so-03" },
+        { "id": "fao-example", "label": "FAO's worked example: 20 × 20 m = 400 m²", "value": 400, "unit": "m²", "chunk": "so-03" },
+        { "id": "fao-depth-shallow", "label": "Bigger ponds: at least 0.75 m at the shallow end", "value": 0.75, "unit": "m", "chunk": "so-04" },
+        { "id": "fao-depth-deep", "label": "Bigger ponds: at least 1–1.2 m at the deepest point", "value": 1, "unit": "m", "chunk": "so-04" }
+      ],
+      "setupTypes": [
+        { "id": "earthen", "label": "Earthen pond", "media": "pond-ilorin", "text": "Dug into the ground with banks made from the dug-out soil. The most common setup among surveyed farmers.", "chunks": ["so-01", "so-05"] },
+        { "id": "concrete", "label": "Concrete tank", "media": "tank-concrete", "text": "A built tank you will also see in use. These lessons don't yet compare its costs or results.", "chunks": ["so-06"] },
+        { "id": "tarpaulin", "label": "Tarpaulin tank", "media": "ponds-makeshift", "text": "A collapsible tank on a metal frame, often seen in backyards. These lessons don't yet compare its costs or results.", "chunks": ["so-06"] }
+      ],
+      "challenges": [
+        { "id": "c-fao-example", "prompt": "Build FAO's worked example: a 20 × 20 m pond.", "check": { "length": 20, "width": 20 }, "explain": "20 × 20 m = 400 m², above the 300 m² FAO suggests for a first pond (so-03).", "chunk": "so-03" },
+        { "id": "c-smallest-square", "prompt": "Find the smallest square pond (in 0.5 m steps) that is larger than 300 m².", "check": { "square": true, "minArea": 300, "maxArea": 306.25 }, "explain": "17.5 × 17.5 m = 306.25 m², just over 300 m² (so-03).", "chunk": "so-03" },
+        { "id": "c-emeka-backyard", "prompt": "Fill Emeka's 8 × 6 m backyard completely. How does it compare with 300 m²?", "check": { "length": 8, "width": 6 }, "explain": "8 × 6 m = 48 m², far smaller than the 300 m² FAO suggests for a pond, so a small backyard usually points to other options (so-03, so-06).", "chunk": "so-03" }
+      ],
+      "completion": { "challengesDone": 2 }
+    },
+    {
+      "id": "spot-the-signs",
+      "type": "observation",
+      "title": "Spot the warning signs",
+      "teaser": "Watch animated pond scenes and tap the warning signs of poor water before it's too late.",
+      "subjectId": "fish-farming",
+      "topicId": "water",
+      "badge": "sharp-eye",
+      "instructions": "Look closely at each pond scene and tap anything that could be a warning sign. Not everything you see is a problem.",
+      "scenes": [
+        {
+          "id": "hot-afternoon",
+          "title": "A hot afternoon",
+          "context": "It has been very hot all day. You visit the pond after the afternoon feed.",
+          "elements": [
+            { "id": "gasping", "label": "Fish gulping air at the surface", "visual": "fish-surface", "isSign": true, "explain": "Fish gathering at the surface to gulp air is a warning sign of poor water. Hot weather can reduce the oxygen available to fish.", "chunk": "wa-06" },
+            { "id": "uneaten-feed", "label": "Uneaten feed floating", "visual": "feed-floating", "isSign": true, "explain": "Fish eating poorly is a warning sign, and overfeeding can reduce oxygen in the water.", "chunk": "wa-06" },
+            { "id": "bird", "label": "A bird resting on the bank", "visual": "bird", "isSign": false, "explain": "The lesson doesn't list this as a warning sign of poor water." }
+          ]
+        },
+        {
+          "id": "after-rain",
+          "title": "After a heavy storm",
+          "context": "A heavy storm washed soil from the bank into the pond overnight.",
+          "elements": [
+            { "id": "muddy", "label": "Very muddy, brown water", "visual": "water-muddy", "isSign": true, "explain": "Good pond water should not be too muddy.", "chunk": "wa-06" },
+            { "id": "normal-swim", "label": "Fish swimming strongly", "visual": "fish-swimming", "isSign": false, "explain": "Strong swimming is not a warning sign. Weak swimming would be.", "chunk": "wa-06" },
+            { "id": "leaves", "label": "A few leaves on the water", "visual": "leaves", "isSign": false, "explain": "The lesson doesn't list this as a warning sign of poor water." }
+          ]
+        },
+        {
+          "id": "feeding-time",
+          "title": "Feeding time",
+          "context": "You throw in feed and watch the fish for a few minutes.",
+          "elements": [
+            { "id": "eating-well", "label": "Most fish rushing to eat", "visual": "fish-feeding", "isSign": false, "explain": "Fish eating eagerly is a good sign, not a warning.", "chunk": "wa-06" },
+            { "id": "weak-swimmer", "label": "One fish swimming weakly", "visual": "fish-weak", "isSign": true, "explain": "Fish swimming weakly is a warning sign of poor water.", "chunk": "wa-06" },
+            { "id": "bad-smell", "label": "A bad smell from the water", "visual": "smell", "isSign": true, "explain": "Good pond water should not smell bad.", "chunk": "wa-06" }
+          ]
+        }
+      ],
+      "remedy": { "text": "One remedy in FAO's handbook is replacing part of the pond water with clean water, which depends on having a reliable supply.", "chunk": "wa-06" },
+      "completion": { "scenesDone": 3 }
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "status": "draft-unreviewed",
+  "welcome": {
+    "curious": "Ponds, concrete tanks, tarpaulin tanks: see what each looks like and try sizing your own pond.",
+    "considering": "Before you spend on a setup, use the pond builder to see what space and size really mean.",
+    "student": "Here's FAO's practical guidance on siting and sizing a first pond, plus the tank types you'll see in Nigeria."
+  },
+  "starterQuestions": [
+    "How big should my first pond be?",
+    "Where is the best place to dig a pond?",
+    "How deep should a fish pond be?"
+  ],
+  "synonyms": {
+    "size": "square metres",
+    "big": "larger",
+    "dig": "digging",
+    "location": "spot",
+    "place": "spot",
+    "tarpaulin": "tarpaulin tanks",
+    "plastic tank": "tarpaulin tanks"
+  },
+  "understandingCheck": [
+    {
+      "id": "uc-1",
+      "question": "What size does FAO suggest for a first pond?",
+      "options": ["Larger than 300 square metres", "Exactly 10 square metres", "Any size, it doesn't matter"],
+      "answerIndex": 0,
+      "chunk": "so-03"
+    },
+    {
+      "id": "uc-2",
+      "question": "Which place should you avoid for a pond?",
+      "options": ["A gentle slope", "Low ground that floods in the rainy season", "A sunny spot close to home"],
+      "answerIndex": 1,
+      "chunk": "so-02"
+    },
+    {
+      "id": "uc-3",
+      "question": "What setup did most farmers in the WorldFish survey use?",
+      "options": ["Earthen ponds", "Glass aquariums", "Floating cages only"],
+      "answerIndex": 0,
+      "chunk": "so-01"
+    }
+  ],
+  "stuckHints": {
+    "lesson": "Try the pond builder in so-03: drag the corners to 20 by 20 metres and watch the area reach 400 square metres.",
+    "activity-plan": "Start with three facts about your space: roughly how long, how wide, and whether the ground floods or slopes.",
+    "activity-fictional": "Re-read Emeka's situation and compare it with so-02 (where to put a pond) and so-03 (pond size).",
+    "guide": "Try asking about one thing at a time, for example: 'Where is the best place to dig a pond?'"
+  },
+  "nextSteps": [
+    { "id": "measure-space", "label": "Measure a space you might use (pace it out or use a tape) and try those numbers in the pond builder", "chunks": ["so-03"] },
+    { "id": "visit-farm", "label": "Visit a local fish farm and ask why they chose a pond or a tank", "chunks": ["so-06"] },
+    { "id": "talk-extension", "label": "Find out if there is a fisheries extension agent near you who can look at your site", "chunks": ["so-02", "so-07"] },
+    { "id": "pause", "label": "Pause here. You know the main setup options, and you can come back any time", "chunks": [] }
+  ],
+  "defaultNextStep": { "considering": "measure-space", "default": "visit-farm" },
+  "unsupportedFallback": {
+    "message": "This topic doesn't cover that yet, so I can't give you a reliable answer.",
+    "nextStep": "visit-farm"
+  },
+  "reminder": {
+    "optional": true,
+    "demoOnly": true,
+    "label": "Remind me to measure a possible space this week",
+    "preview": "Hi! Have you had a chance to measure a space for a pond? Try your numbers in the pond builder."
+  }
+}

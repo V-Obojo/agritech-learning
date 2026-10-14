@@ -1,6 +1,6 @@
 {
   "status": "draft-unreviewed",
-  "note": "Sources gathered from the web on 2026-10-14 to draft placeholder content. Not yet reviewed by a fisheries expert.",
+  "note": "Sources gathered from the web on 2026-10-14 for Ovayi Farm learning content.",
   "sources": [
     {
       "id": "fao-hb-ch1",
@@ -64,6 +64,46 @@
       "publisher": "FAO",
       "year": 2026,
       "url": "https://www.fao.org/fish4acp/where-we-work/nigeria/en",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "fao-tp362-anatomy",
+      "title": "Artificial reproduction and pond rearing of the African catfish Clarias gariepinus in sub-Saharan Africa: A handbook. Section 3.1, Description of the genus and species",
+      "publisher": "FAO Fisheries Technical Paper 362; de Graaf G. & Janssen H.",
+      "year": 1996,
+      "url": "https://www.fao.org/4/w3595e/w3595e04.htm",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "fao-tp362-nursing",
+      "title": "Artificial reproduction and pond rearing of the African catfish Clarias gariepinus in sub-Saharan Africa: A handbook. Chapter 5, Fry nursing in earthen ponds",
+      "publisher": "FAO Fisheries Technical Paper 362; de Graaf G. & Janssen H.",
+      "year": 1996,
+      "url": "https://www.fao.org/4/w3595e/w3595e06.htm",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "fao-hb-ch3",
+      "title": "Handbook on small-scale freshwater fish farming, Chapter 3: Constructing fish ponds",
+      "publisher": "FAO (Training Series No. 24), compiled by V. Gopalakrishnan and A.G. Coche",
+      "year": 1994,
+      "url": "https://www.fao.org/4/T0581E/T0581E04.htm",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "commons-concrete-tank",
+      "title": "Concrete fish pond (photograph)",
+      "publisher": "Wikimedia Commons; Judethedeus, CC0",
+      "year": 2025,
+      "url": "https://commons.wikimedia.org/wiki/File:Concrete_fish_pond.jpg",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "commons-tarpaulin-tanks",
+      "title": "Makeshift fish ponds (photograph of tarpaulin tanks)",
+      "publisher": "Wikimedia Commons; Iwuala Lucy, CC BY-SA 4.0",
+      "year": 2025,
+      "url": "https://commons.wikimedia.org/wiki/File:Makeshift_Fish_ponds.jpg",
       "accessed": "2026-10-14"
     }
   ]

@@ -128,3 +128,87 @@ Iteration: run the failing spec first, fix, then rerun the full suites.
 Blocked: if Playwright cannot launch, record the exact error in harness/build-log.md and stop.
 Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop.
 ```
+
+---
+
+# v2: Responsive web product, accounts, dashboard, interactive labs (phases 9–14)
+
+Claude finished step V (libraries, photos, new topics, labs/badges/media registries). Run these in order, each in a fresh Codex session (`/new`), approving between phases. Expect approval prompts for `npm run verify` and `npm run test:e2e` (they must run outside the sandbox).
+
+## Phase 9: Design system + responsive, animated shell
+
+```
+/goal Complete Phase 09 exactly as specified in harness/build/phase-09-design-system.md.
+Outcome: a modern edtech design system (tokens, light/dark with a persisted toggle and no flash), a sticky top nav (Learn, Labs, Dashboard, Sign in/up placeholders) and footer without the storage note, and every existing page (home, area, hub, coming-soon, lesson, activity, next, not-found) redesigned to look great at 1440/1280/768/375 with motion animations that respect reduced motion. Lesson pages get a 3-column desktop layout (TOC | lesson | guide) and a bottom-sheet guide on phones. The draft banner is removed; ::figure/::lab lines are hidden; the hub shows exactly one "Up next"; the duplicate hero parent line is gone; the dynamic-route prerender warning is fixed; the 2 newly live topics render.
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval), pass on BOTH Playwright projects (desktop-chromium 1440 and mobile-chromium 375), including the new assertions in the phase file; screenshots saved under test-results/phase-09/.
+Constraints: AGENTS.md hard rules + responsive rules. content/ and public/media/ are read-only. No new deps, no remote assets, don't read .env.local. Keep existing behaviour; update tests deliberately (prefer roles/labels).
+Boundaries: src/app/**, src/components/**, globals.css, playwright.config.ts, tests/**.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run verify/e2e outside the sandbox.
+Blocked: stop and log in harness/build-log.md.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop. Do not start Phase 10.
+```
+
+## Phase 10: Accounts + database + progress sync
+
+```
+/goal Complete Phase 10 exactly as specified in harness/build/phase-10-auth-db.md.
+Outcome: optional email/password accounts with next-auth v4 (Credentials, JWT) and a Drizzle + libsql SQLite database (users, progress, events, dashboard_prefs, guide_history with cascades and migrations); /signup, /signin (with "Forgot password? Contact the admin" using catalog supportContact), protected /account (profile, theme, change password, delete account) and a protected /dashboard placeholder; a signed-in nav menu; progress and events synced to the account through the unchanged progress store API, with guest progress merged on sign-up/sign-in; progress schema gains `labs`.
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval) pass, with the unit and e2e cases listed in the phase file, using a temp SQLite DB; no secrets or passwords in test output.
+Constraints: AGENTS.md hard rules incl. the security rules. Never read or write .env.local or print secrets; if NEXTAUTH_SECRET is missing, fail with a clear message. content/ is read-only. No new deps.
+Boundaries: src/lib/db/**, src/lib/auth/**, src/app/api/auth/**, src/app/api/me/**, the signup/signin/account/dashboard routes under src/app/, src/lib/progress.ts, src/lib/metrics.ts, src/components/**, drizzle.config.ts, drizzle/**, tests/**, README.md (accounts setup section), .env.example.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run verify/e2e outside the sandbox.
+Blocked: stop and log in harness/build-log.md.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize (include the exact commands the human must run to set NEXTAUTH_SECRET and migrate), and stop. Do not start Phase 11.
+```
+
+## Phase 11: Customizable dashboard, streaks, badges
+
+```
+/goal Complete Phase 11 exactly as specified in harness/build/phase-11-dashboard.md.
+Outcome: /dashboard with customizable widgets (continue, progress rings, streak, badges, activity chart, answers, guide history, labs, checks, time estimate, profile) that can be shown/hidden and reordered (pointer + keyboard) and persist per user; pure unit-tested calculators for streaks (Africa/Lagos), badges (rule-driven from content/badges.json), topic stats, activity series and time estimate; a badge-earned toast across the app.
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval) pass, with the calculator tests and the e2e cases in the phase file; the chart bundle is not loaded outside the dashboard; screenshots under test-results/phase-11/.
+Constraints: AGENTS.md hard rules. No badge/topic/lab ids hardcoded in src (non-test). content/ is read-only. No new deps.
+Boundaries: src/lib/insights/**, src/components/dashboard/**, src/app/dashboard/**, src/app/api/me/dashboard/**, small hooks in src/components/** for the toast, tests/**.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run verify/e2e outside the sandbox.
+Blocked: stop and log in harness/build-log.md.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop. Do not start Phase 12.
+```
+
+## Phase 12: Lesson media, lightbox, lab framework + 3D catfish
+
+```
+/goal Complete Phase 12 exactly as specified in harness/build/phase-12-media-3d.md.
+Outcome: ::figure and ::lab directives render as credited next/image figures with a zoom/pan/rotate lightbox and lazily loaded labs inside a LabFrame; media/labs loaders + integrity checks; the catfish-3d lab as a procedural Clarias gariepinus model in react-three-fiber (orbit/zoom, presets, auto-rotate, hotspots anchored to body parts with chunk citations, adult/fingerling modes, completion saved to progress.labs, WebGL fallback); topic 2 fully live; the /labs teaser gallery; and /credits listing all media and sources.
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval) pass, with the unit and e2e cases in the phase file, including proof that three/r3f is not loaded on home or topic 1; screenshots under test-results/phase-12/.
+Constraints: AGENTS.md hard rules. No remote assets or models; content/ and public/media/ are read-only; no new deps; keep the model under ~20k triangles; respect reduced motion.
+Boundaries: src/lib/content/** (directives, media, labs), src/components/media/**, src/components/labs/**, src/app/labs/**, src/app/credits/**, lesson renderer, metrics schema, tests/**.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run verify/e2e outside the sandbox.
+Blocked: stop and log in harness/build-log.md.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop. Do not start Phase 13.
+```
+
+## Phase 13: Simulators
+
+```
+/goal Complete Phase 13 exactly as specified in harness/build/phase-13-simulators.md.
+Outcome: three content-driven labs registered in the lab framework: water-source-sim (source picker, animated year slider, supply vs need, shortfall warnings, questions), pond-builder (draggable SVG pond with measuring tape and depth stick, live area/volume/litres, FAO reference markers, setup-type switcher, challenges), and spot-the-signs (animated SVG pond scenes, tap the warning signs, scored feedback, remedy). Each has a pure unit-tested logic module, is keyboard and touch accessible, shows its example note, cites chunks, and saves results to progress.labs; topic 4 is fully live; the dashboard and /labs reflect all 4 labs.
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval) pass, with the unit and e2e cases in the phase file; screenshots under test-results/phase-13/.
+Constraints: AGENTS.md hard rules. Only illustrative numbers from labs.json; no invented facts, costs or specs; content/ is read-only; no new deps; reduced motion respected.
+Boundaries: src/lib/labs/**, src/components/labs/**, small updates to the dashboard labs widget and /labs, tests/**.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run verify/e2e outside the sandbox.
+Blocked: stop and log in harness/build-log.md.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop. Do not start Phase 14.
+```
+
+## Phase 14: Full-journey E2E, performance, a11y, docs
+
+```
+/goal Complete Phase 14 exactly as specified in harness/build/phase-14-polish-e2e.md.
+Outcome: a journey.spec.ts covering visitor → topic 1 → sign-up → all labs in topics 2–4 → dashboard → sign out/in → theme on both projects; keyboard-only lab specs; a contrast unit test for both themes; lazy-loading and First Load JS evidence; friendly error/empty states; dead code removed; and a rewritten README with screenshots, setup, accounts, labs, credits/licenses, testing and step-by-step Vercel + Turso deploy instructions.
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval) pass on both projects; `git ls-files` shows no .env.local, data/ or db files.
+Constraints: AGENTS.md hard rules. No new features or deps; content/ is read-only; don't deploy or push.
+Boundaries: tests/**, minimal fixes in src/**, README.md, docs/screenshots/**, .gitignore.
+Iteration: run the failing spec first, fix, then rerun the full suites.
+Blocked: stop and log in harness/build-log.md.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop.
+```

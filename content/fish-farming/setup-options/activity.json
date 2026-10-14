@@ -1,0 +1,43 @@
+{
+  "id": "setup-options-activity",
+  "lesson": "setup-options",
+  "status": "draft-unreviewed",
+  "title": "Plan a possible setup",
+  "intro": "Pick one option. Both count as completing the activity.",
+  "paths": [
+    {
+      "id": "plan",
+      "label": "Think about a real space",
+      "prompt": "Describe a space you might use (or know about): roughly how big it is, whether it slopes or floods, how close it is to home and water, and whether a pond or a tank seems more realistic. What would you still need to find out?",
+      "example": "There's an empty plot behind my uncle's house, maybe 25 by 20 metres, on a gentle slope. It doesn't flood. The well is close. A 20 by 20 metre pond might fit. I'd need to check the soil and whether the well has enough water."
+    },
+    {
+      "id": "fictional",
+      "label": "Help someone choose",
+      "prompt": "Read Emeka's situation. Which option would you suggest he look into first, and what should he check?",
+      "scenario": "Emeka (fictional) has a narrow backyard of about 8 by 6 metres behind his house in town, paved with concrete, and a borehole nearby. His cousin has a large piece of farmland 40 minutes away with a gentle slope, but the lowest corner floods every rainy season. Emeka wants to start small and be able to check on his fish every day.",
+      "modelPoints": [
+        { "point": "The backyard is far smaller than the 300 square metres FAO suggests for a pond, so a pond there is unlikely.", "criterion": "size", "chunks": ["so-03"] },
+        { "point": "Tanks are something people use in small spaces, but these lessons don't compare them yet, so he should ask farmers who use them.", "criterion": "setup-type", "chunks": ["so-06"] },
+        { "point": "On the cousin's land, the gentle slope is good, but he should avoid the corner that floods.", "criterion": "site", "chunks": ["so-02"] },
+        { "point": "Wanting to check daily favours a site close to home.", "criterion": "site", "chunks": ["so-02", "so-07"] },
+        { "point": "Water from the nearby borehole is a plus, but he should still check it lasts all year.", "criterion": "water", "chunks": ["so-07"] }
+      ]
+    }
+  ],
+  "rubric": [
+    { "id": "size", "description": "Considers the size of the space or pond (e.g. square metres, length × width).", "chunks": ["so-03"], "keywords": ["metre", "metres", "meter", "size", "big", "small", "square", "by", "area", "300", "400"] },
+    { "id": "site", "description": "Considers where the setup goes: slope, flooding, sun, closeness to home.", "chunks": ["so-02"], "keywords": ["slope", "flood", "floods", "low", "sunny", "close", "near", "home", "far", "steep"] },
+    { "id": "setup-type", "description": "Compares a pond with a tank (concrete or tarpaulin).", "chunks": ["so-01", "so-06"], "keywords": ["pond", "tank", "concrete", "tarpaulin", "earthen", "plastic"] },
+    { "id": "water", "description": "Mentions the water supply for the setup.", "chunks": ["so-07"], "keywords": ["water", "well", "borehole", "stream", "supply"] },
+    { "id": "work", "description": "Recognises the work involved in building and running the setup.", "chunks": ["so-05"], "keywords": ["dig", "digging", "build", "work", "labour", "help", "neighbour"] },
+    { "id": "question", "description": "Names something still to find out or someone to ask.", "chunks": ["so-06", "so-07"], "keywords": ["?", "ask", "check", "find out", "not sure", "extension", "farmer"] }
+  ],
+  "feedbackRules": [
+    "Be supportive and specific; reference lesson chunk ids.",
+    "Start with one thing done well (cite a rubric criterion).",
+    "Then one or two things to think about next (cite criterion and chunk).",
+    "End with a suggested next step taken from topic.json nextSteps.",
+    "Never give construction costs, stocking numbers or tank specifications that are not in the lesson."
+  ]
+}
