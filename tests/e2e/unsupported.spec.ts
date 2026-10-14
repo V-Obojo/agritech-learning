@@ -1,6 +1,6 @@
-import { test, expect, startLesson, pathway, events, expectTopicMetrics } from "./fixtures";
+import { test, expect, startLesson, openGuide, pathway, events, expectTopicMetrics } from "./fixtures";
 test("unsupported medicine question: honest limitation, authored next step and no citations",async({page})=>{
-  await startLesson(page);
+  await startLesson(page);await openGuide(page);
   const guide=page.getByRole("region",{name:"Ask the learning guide",exact:true});
   await guide.getByLabel("Your question").fill("What dose of medicine should I give sick catfish?");
   const response=page.waitForResponse(response=>response.url().endsWith("/api/guide") && response.request().method()==="POST");

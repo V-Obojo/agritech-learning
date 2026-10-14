@@ -17,7 +17,7 @@ Observed progress and verification evidence. **Append-only**: add corrections as
 | 7 Navigation UI | Complete | 2026-10-14 | 2026-10-14 | `npm run verify`: 186 tests, 44/44 static generation; both 375px mock topic journeys passed | none |
 | 8 Journey E2E | Complete | 2026-10-14 | 2026-10-14 | 7/7 E2E specs; `npm run verify`: 199 unit tests and successful production build | none |
 | V v2 prep | Complete | 2026-10-14 | 2026-10-14 | content integrity clean; deps installed | none |
-| 9 Design system | Not started | | | | |
+| 9 Design system | Complete | 2026-10-14 | 2026-10-14 | `npm run verify`: 201 unit tests + build; E2E 22/22 (11 per project); 41 screenshots; dev check 14 routes | none |
 | 10 Auth + DB | Not started | | | | |
 | 11 Dashboard | Not started | | | | |
 | 12 Media + 3D | Not started | | | | |
@@ -183,3 +183,46 @@ Observed progress and verification evidence. **Append-only**: add corrections as
 - 3D: no Clarias model available under open licence/downloadable without login → Phase 12 builds a procedural model from FAO anatomy.
 - Verification: node integrity script → 4 live topics (8/7/10/7 chunks), media 10 (files exist), labs 4, badges 16, sources 13, problems [].
 - Expected breakage: tests assuming 2 live topics; Phase 9 updates them.
+
+### 2026-10-14 — Phase 09 — Responsive design system and animated learning shell
+- Status change: Not started → Complete. Phase 10 remains Not started.
+- Scope worked on: refined cream/green/soil/amber light and dark tokens, fluid heading scale, spacing/radius/shadow/elevation/layer tokens, 1200px container and specified breakpoints. System theme by default; a tiny synchronous head script applies the validated localStorage override before body paint, with a persisted nav toggle and safe storage failure handling. Sticky blurred navigation, accessible native mobile menu dialog, catalog-driven wordmark/parent/support footer, and Labs/Dashboard/Sign in/Sign up/Credits placeholders. Removed the footer storage note and duplicate hero parent line.
+- Page layouts: decorative CSS orbit hero, staggered entrance/hover cards and intention cards; area header band and responsive subject grid; two-column hub with numbered timeline, sticky progress ring/intention/CTA card and exactly one computed Up next; responsive lessons with sticky scroll-aware TOC | reading column | guide at >=1280, contents dropdown + two columns at 768–1279 and native modal guide bottom sheet below 768. Dialogs support Escape, focus containment and focus return; guide citation links close the phone sheet and return to the lesson anchor. Card activity/next layouts and animated check/feedback states preserve the existing progress, API and learning flows. Motion effects and CSS decoration respect reduced motion. Wordmark/source/revisit links meet the 44px tap-target rule.
+- Content handling: all four live topics render through existing content routes, with their authored lessons/checks/activities/next steps. Removed DraftBanner usage on all learning pages. The chunk body renderer filters ::figure/::lab lines before rendering text; media/labs remain for their assigned phases. Updated stale route/API/content-loader test expectations using authored availability and source data. The user explicitly approved the narrow boundary exception for src/lib/content/index.test.ts; no production library code changed.
+- Files changed: src/app/globals.css, layout.tsx, not-found.tsx, five dynamic page files, navigation-data.test.ts and api/help/topics.test.ts; new placeholder routes /labs, /dashboard, /signin, /signup and /credits. New components site-nav.tsx, site-footer.tsx, placeholder-page.tsx, motion-surface.tsx and lesson-tools.tsx; updated welcome-flow, subject-hub, lesson-flow, guide-panel, activity-flow, next-flow, coming-soon and intention-picker. playwright.config.ts now defines desktop-chromium 1440×900 and mobile-chromium 375×812 (installed Edge on Windows), four workers, mock guide and a process-specific test database URL. Updated E2E fixtures/navigation/unsupported/responsive specs; added tests/manual/phase-09-dev.mjs. PLANS.md and this summary table updated.
+- Tests added: every page type, all four live lesson/activity/next routes and coming-soon area/subject/topic variants fit 375/768/1280/1440; layout has 1/2/3 columns at the specified widths; populated fictional activity feedback and reminder layouts fit all widths; one Up next; one home product h1 and no hero parent duplication; banned draft/storage copy and directive text absent; every placeholder resolves; mobile menu/sheet opening, closing and focus return; system theme/override/persistence across reload/navigation and override present at the first observed body insertion; reduced-motion page has no running animations, moving hover or orbit; wordmark and source links >=44px. Existing guide citations, unsupported fallback, help/retry, progress/session independence, resume/reset and metrics journeys pass on both projects. Tests block external browser requests and assert mock responses.
+- Check iteration: first npm run check → exit 1, 190 passed/9 failed in stale content tests (two-live-topic, catfish-unavailable and eight-source expectations). After the authorized test corrections, npm run check repeatedly passed with lint/typecheck green and 201/201 unit tests in 20/20 files; final standalone check after tap-target change → exit 0, 201/201 (3.11s).
+- Build iteration: first approved npm run verify outside sandbox → exit 1 after 201 unit tests passed: Next.js reported `Next.js encountered the unstable value new Date() while prerendering` in site-footer.tsx. Made the server footer an async use-cache component so the year prerenders. Subsequent production verification passed. Final approved npm run verify outside sandbox → exit 0; lint/typecheck green, 201/201 tests in 20/20 files (1.79s), Turbopack compile 737ms, TypeScript 2.8s, static generation 55/55 (1720ms). No Next config or sandbox workaround. Home/areas/hub/placeholders have static output; Cache Components retains prerendered route shells. Inspection of all 12 generated live lesson/activity/next HTML files found prerendered h1s, and the four lesson HTML files contain all 8/7/10/7 authored chunk sections with directives absent. APIs remain dynamic.
+- E2E iteration: first approved npm run test:e2e outside sandbox → exit 1, 20 passed/2 failed (1.5m). A new test incorrectly demanded HTTP 404 on the cold streamed not-found route (Next may start that stream at HTTP 200); it now checks the rendered not-found UI. Mobile navigation revealed an instantaneous visibility check could skip opening the guide before navigation completed. The targeted rerun of navigation.spec.ts + no-horizontal-scroll.spec.ts → exit 1, 10 passed/2 failed (58.9s): waiting by .lesson-layout also matched Next's hidden cached lesson. Changed the helper to await the accessible article, then open the mobile dialog; retained role-based guide queries. Full rerun → 22 passed (1.3m). Screenshot review prompted the final 44px tap-target adjustments and assertions; final full suite below reran against those changes.
+- Final E2E gate: approved npm run test:e2e outside sandbox → exit 0, **22/22 passed (1.3m): desktop-chromium 11/11 and mobile-chromium 11/11**. All page widths and new Phase 09 assertions passed. No unexpected browser errors or external requests; .last-run.json reports passed with no failed tests. Routine NO_COLOR/FORCE_COLOR process warnings did not affect results. Playwright managed the production server and browser lifecycle.
+- Prerender-warning evidence: read installed Next.js docs `01-app/02-guides/migrating-to-cache-components.md` (await params under Suspense), `preventing-flash-before-hydration.md`, and page/static-param references. Each of the five dynamic page exports now wraps a child that awaits params in Suspense, retaining generateStaticParams. Final approved `node tests/manual/phase-09-dev.mjs` outside sandbox → exit 0: **14 dynamic routes passed** (area, hub, all four topics × lesson/activity/next), with no page/console errors, external requests, URL-data or blocking-prerender warnings. The script starts a temporary mock dev server on 3101, captures browser errors and server stdout/stderr, checks them, closes browser/server, and saves `test-results/phase-09/dev-console.log` plus `dev-result.json` (14 URLs, problems: []). It was rerun after the final Playwright cleanup so this evidence remains beside the final screenshots.
+- Visual evidence: inspected desktop/phone home, hub, live lesson, phone guide sheet, dark home and setup activity screenshots. Screenshots use CSS viewport widths; the mobile device's pixel ratio makes PNG pixel dimensions larger than 375. All 41 PNGs below are under the gitignored `test-results/phase-09/` directory. Topics 1–4 correspond to the authored path order.
+
+| Screenshot view | Desktop 1440px | Mobile 375px |
+|---|---|---|
+| activity-1 | activity-1-1440.png | activity-1-375.png |
+| activity-2 | activity-2-1440.png | activity-2-375.png |
+| activity-3 | activity-3-1440.png | activity-3-375.png |
+| activity-4 | activity-4-1440.png | activity-4-375.png |
+| area | area-1440.png | area-375.png |
+| coming-soon | coming-soon-1440.png | coming-soon-375.png |
+| coming-soon-area | coming-soon-area-1440.png | coming-soon-area-375.png |
+| coming-soon-topic | coming-soon-topic-1440.png | coming-soon-topic-375.png |
+| guide-sheet | — | guide-sheet-375.png |
+| home | home-1440.png | home-375.png |
+| home-dark | home-dark-1440.png | home-dark-375.png |
+| hub | hub-1440.png | hub-375.png |
+| lesson-1 | lesson-1-1440.png | lesson-1-375.png |
+| lesson-2 | lesson-2-1440.png | lesson-2-375.png |
+| lesson-3 | lesson-3-1440.png | lesson-3-375.png |
+| lesson-4 | lesson-4-1440.png | lesson-4-375.png |
+| next-1 | next-1-1440.png | next-1-375.png |
+| next-2 | next-2-1440.png | next-2-375.png |
+| next-3 | next-3-1440.png | next-3-375.png |
+| next-4 | next-4-1440.png | next-4-375.png |
+| not-found | not-found-1440.png | not-found-375.png |
+
+- Boundary evidence: git diff --numstat -- content public/media → no output; content and media stayed read-only. Search of non-test src for product/area/subject/topic names/ids, scenario names and chunk prefixes → no matches. git diff --check passed (only routine CRLF normalization notices). No dependencies, installs, remote assets, secrets inspected/edited, live model calls, auth/database features, commits, pushes, branch changes, deletions outside phase scope or external writes. Tests remained in mock mode.
+- Limitations: Labs, Dashboard, account and Credits routes are intentionally placeholders for later phases. Figure/lab directives are hidden until their assigned phases. Automated guide/feedback evidence is mock mode; no live agricultural review or long-term learning outcome is claimed. Native dialog behavior was verified on installed Chromium/Edge; this phase does not add a cross-browser matrix.
+- Blockers / questions for human: none. The content-loader unit-test boundary exception was approved and resolved.
+- Next action: stop at Phase 09. Do not begin Phase 10.

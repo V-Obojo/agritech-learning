@@ -212,3 +212,16 @@ Iteration: run the failing spec first, fix, then rerun the full suites.
 Blocked: stop and log in harness/build-log.md.
 Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop.
 ```
+
+## Phase 9.1: Review fix-up (run before Phase 10)
+
+```
+/goal Complete the "Phase 09.1 fix-up" section at the end of harness/build/phase-09-design-system.md.
+Outcome: aligned breadcrumbs, no duplicate identical "Stuck?" buttons (clearly labelled lesson vs guide help), visible bullet markers in lesson lists, and the home eyebrow plus hub card copy read from content (catalog.product.heroEyebrow and path.json hubCard) with the schemas updated; the hub shows the intention picker directly when no intention is set.
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval) pass on both projects, including the new assertions in that section.
+Constraints: AGENTS.md hard rules. content/ is read-only (the new fields already exist). No new deps. Small diffs only.
+Boundaries: src/components/**, src/app/globals.css, src/lib/content/schemas.ts and loaders, tests/**.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run verify/e2e outside the sandbox.
+Blocked: stop and log in harness/build-log.md.
+Done: append a "Phase 09.1" evidence entry to harness/build-log.md, summarize, and stop. Do not start Phase 10.
+```

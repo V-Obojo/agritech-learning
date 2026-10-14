@@ -8,7 +8,7 @@ Ordered phases. Run **one Codex `/goal` per phase** (texts in `PROMPTS.md`). The
 | R, 6–8 | Ovayi Farm restructure: catalog, fish path, multi-topic model, navigation, journey e2e | `harness/build/phase-06..08-*.md` | — | Complete |
 | — | Baseline pushed to https://github.com/V-Obojo/agritech-learning | — | — | Complete |
 | V | **v2 prep (done by Claude):** libraries installed, 10 licensed photos, topics 2 + 4 content, labs/media/badges registries, harness | n/a | n/a | Complete |
-| 9 | Design system + responsive, animated shell | `harness/build/phase-09-design-system.md` | 2–3h | Not started |
+| 9 | Design system + responsive, animated shell | `harness/build/phase-09-design-system.md` | 2–3h | Complete |
 | 10 | Accounts + database + progress sync | `harness/build/phase-10-auth-db.md` | 2–3h | Not started |
 | 11 | Customizable dashboard, streaks, badges | `harness/build/phase-11-dashboard.md` | 2h | Not started |
 | 12 | Lesson media, lightbox, lab framework + 3D catfish | `harness/build/phase-12-media-3d.md` | 3h | Not started |

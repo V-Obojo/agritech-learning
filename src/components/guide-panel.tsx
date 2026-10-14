@@ -6,7 +6,7 @@ import { postJson } from "./api-client";
 import { StuckHelp } from "./stuck-help";
 import type { LearningContext } from "./learning-types";
 import { recordEvent } from "@/lib/metrics";
-export function GuidePanel({ topic }: { topic: LearningContext }) {
+export function GuidePanel({ topic, onCitation }: { topic: LearningContext; onCitation?:()=>void }) {
   const questionId = `${topic.subjectId}-${topic.topicId}-guide-question`;
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState<GuideResponse | null>(null);
@@ -29,7 +29,7 @@ export function GuidePanel({ topic }: { topic: LearningContext }) {
       <button disabled={busy || !question.trim()}>{busy ? "Thinking…" : "Ask guide"}</button></form>
     <div aria-live="polite" aria-busy={busy}>{error && <p role="alert">{error}</p>}{answer && <div className={answer.supported ? "answer-card" : "not-covered"}>
       <h3>{answer.supported ? "From the lesson" : "Not covered in this lesson"}</h3><p className="answer">{answer.answer}</p>
-      <div className="chips">{answer.citations.map((citation) => <a className="chip" key={citation.chunkId} href={`#${citation.chunkId}`}>{citation.chunkId} · {citation.title}</a>)}</div>
+      <div className="chips">{answer.citations.map((citation) => <a className="chip" key={citation.chunkId} href={`#${citation.chunkId}`} onClick={onCitation}>{citation.chunkId} · {citation.title}</a>)}</div>
       <p><strong>Next step:</strong> {answer.nextStep.label}</p>
       {answer.mode !== "live" && <p className="eyebrow">{answer.mode === "mock" ? "Demo guide · answers from lesson excerpts" : "Demo fallback · the live guide is unavailable"}</p>}
     </div>}</div><StuckHelp step="guide" topic={topic} />

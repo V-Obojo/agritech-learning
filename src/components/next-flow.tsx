@@ -10,7 +10,7 @@ export function NextFlow({ topic }: { topic: LearningContext }) {
   const score=topic.config.understandingCheck.filter(question => current.checkAnswers[question.id]===question.answerIndex).length;
   const recommended=topic.config.nextSteps.find(step => step.id===current.activity?.feedback?.nextStep.id)
     ?? topic.config.nextSteps.find(step => step.id===(topic.config.defaultNextStep[progress.intention ?? ""] ?? topic.config.defaultNextStep.default))!;
-  return <><section className="card"><h2>Your progress</h2><p>Intention: {intention?.label ?? "Not chosen yet"}</p><p>Understanding check: {score}/{topic.config.understandingCheck.length} correct</p>
+  return <div className="next-layout"><section className="card"><h2>Your progress</h2><p>Intention: {intention?.label ?? "Not chosen yet"}</p><p>Understanding check: {score}/{topic.config.understandingCheck.length} correct</p>
     <p>Activity: {current.completed ? "Completed" : "Not completed yet"}</p><p>Guide questions asked: {current.guideQuestionsAsked}</p></section>
     <section className="card" aria-labelledby="session-title"><h2 id="session-title">Your session</h2><p>Completed activity: {current.completed ? "Yes" : "No"}</p><p>Check score: {score}/{topic.config.understandingCheck.length}</p><p>Would return: {progress.wouldReturn ?? "Not answered yet"}</p></section>
     <section className="card"><h2>Recommended next step</h2><p>{recommended.label}</p><h3>Other choices</h3><ul>{topic.config.nextSteps.filter(step => step.id!==recommended.id).map(step => <li key={step.id}>{step.label}</li>)}</ul></section>
@@ -25,5 +25,5 @@ export function NextFlow({ topic }: { topic: LearningContext }) {
       <Link href={`${topic.basePath}/activity`}>Return to the activity</Link>
       <Link href={topic.homePath} onClick={() => {resetProgress();resetMetrics();}}>Start over</Link>
     </div>
-  </>;
+  </div>;
 }

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Link from "next/link";
 import { getCatalog } from "@/lib/content";
+import catalog from "../../content/catalog.json";
+import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
 const product = getCatalog().product;
 
 export const metadata: Metadata = {
@@ -11,12 +13,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('ovayi-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}` }} /></head>
       <body className="min-h-full flex flex-col">
         <a className="skip-link" href="#main">Skip to content</a>
-        <header className="site-header"><Link href="/">{product.name}</Link><span>by {product.parent}</span></header>
+        <SiteNav name={product.name} parent={product.parent} />
         {children}
-        <footer className="site-footer">No sign-up. Your progress stays on this device when storage is available.</footer>
+        <SiteFooter name={product.name} parent={product.parent} supportContact={catalog.product.supportContact} />
       </body>
     </html>
   );

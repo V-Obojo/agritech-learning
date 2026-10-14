@@ -66,3 +66,13 @@ The verify + e2e summaries (both projects), the screenshot list, and how the pre
 
 ## Stop condition
 Stop after the acceptance criteria are verified. Do not begin Phase 10.
+
+## Phase 09.1 fix-up (added after human review)
+Visual review of the Phase 09 screenshots found:
+1. **Breadcrumb misalignment:** the current (last) crumb sits higher than the links, because `.breadcrumbs a` has `min-height:44px` + flex centering but the `aria-current` span does not. Align every crumb vertically (e.g. `li { display:flex; align-items:center }` and give the current span the same box).
+2. **Two identical "Stuck?" buttons** on lesson pages (desktop panel and mobile sheet): `GuidePanel` renders `StuckHelp step="guide"` and `lesson-tools.tsx` renders `StuckHelp step="lesson"`. Keep both helps, but make them distinct and clear: a single "Stuck?" control that offers both "Help with the lesson" and "Help asking the guide" (or two clearly labelled buttons). Never two identical labels next to each other.
+3. **Bullet lists lost their bullets** in lesson chunks (e.g. wa-09 "Questions to answer…"): restore visible list markers in `.lesson-chunk ul`.
+4. **Hardcoded copy → content:** use `catalog.product.heroEyebrow` (home eyebrow) and the subject `path.json` `hubCard` fields (`title` replaces "Make room to grow", `note` replaces "One topic at a time…", `intentionPrompt` replaces "Choose what brings you here"). Update the schemas/loaders. No copy literals left in these components.
+5. On the hub, when no intention is chosen, show the intention picker directly with `hubCard.intentionPrompt` as its legend, without the "You're here because:" sentence.
+
+Acceptance: e2e asserts the breadcrumb items share the same vertical centre (±2px) at 1440 and 375; no two visible buttons with the identical accessible name "Stuck?" on a lesson page; a lesson `ul li` has a visible list-style or ::marker; `grep` finds none of the old literals in src (non-test). `npm run verify` + `npm run test:e2e` pass on both projects. Log evidence in the build log as "Phase 09.1".

@@ -3,19 +3,19 @@ vi.mock("server-only", () => ({}));
 import { POST as guide } from "../guide/route";
 import { POST as feedback } from "../feedback/route";
 import { POST as help } from "./route";
-import { getTopic } from "@/lib/content";
+import { getTopic, getSubjectPath, listLiveTopics } from "@/lib/content";
 function request(body: unknown) { return new Request("http://localhost/api", {method: "POST", body: JSON.stringify(body)}); }
 beforeEach(() => vi.stubGlobal("fetch", vi.fn(() => { throw new Error("No network in tests"); })));
 afterEach(() => vi.unstubAllGlobals());
 describe("topic API contracts", () => {
   for (const [name, handler, fields] of [["guide",guide,{ question: "What do I need?" }],["feedback",feedback,{pathId:"fictional",response:"idk"}],["help",help,{step:"guide"}]] as const) {
-    it.each(["missing", "meet-the-catfish"])(`${name} returns 400 for unavailable topic %s`, async topicId => {
+    it.each(["missing", ...getSubjectPath("fish-farming").topics.filter(topic=>topic.status==="coming-soon").map(topic=>topic.id)])(`${name} returns 400 for unavailable topic %s`, async topicId => {
       const result = await handler(request({ topicId, ...fields })); expect(result.status).toBe(400); expect(await result.json()).toEqual({error: expect.any(String)});
     });
     it(`${name} requires topicId`, async () => { expect((await handler(request(fields))).status).toBe(400); });
     it(`${name} rejects a mismatched subject`, async () => { expect((await handler(request({topicId:"water",subjectId:"poultry",...fields}))).status).toBe(400); });
   }
-  it.each(["what-is-fish-farming", "water"])("help serves all authored steps for %s", async topicId => {
+  it.each(listLiveTopics().map(topic=>topic.topicId))("help serves all authored steps for %s", async topicId => {
     const topic = getTopic("fish-farming",topicId);
     for (const [step,hint] of Object.entries(topic.config.stuckHints)) {
       const response = await help(request({topicId,step})); expect(response.status).toBe(200); expect(await response.json()).toEqual({hint});

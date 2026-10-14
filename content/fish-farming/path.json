@@ -51,5 +51,10 @@
       "summary": "What a first cycle asks of you in time and money before you commit.",
       "status": "coming-soon"
     }
-  ]
+  ],
+  "hubCard": {
+    "title": "Your progress",
+    "note": "One topic at a time. At your own pace.",
+    "intentionPrompt": "Tell us what brings you here"
+  }
 }

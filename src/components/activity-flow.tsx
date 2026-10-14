@@ -1,5 +1,6 @@
 "use client";
 import { useState, type FormEvent } from "react";
+import { Reveal } from "./motion-surface";
 import Link from "next/link";
 import type { Activity } from "@/lib/content/schemas";
 import { feedbackResponseSchema, type FeedbackEntry } from "@/lib/feedback/types";
@@ -31,21 +32,21 @@ export function ActivityFlow({ activity, topic }: { activity: Activity; topic: L
     } catch { setError("Feedback could not load. Your answer is saved; please try again."); }
     finally { setBusy(false); }
   }
-  return <><p>{activity.intro}</p><fieldset disabled={!ready || busy}><legend>Choose your activity path</legend>
+  return <div className="activity-layout"><p className="activity-intro lead">{activity.intro}</p><fieldset disabled={!ready || busy}><legend>Choose your activity path</legend>
     {activity.paths.map((option) => <label className="choice" key={option.id}><input type="radio" name={`${topic.subjectId}-${topic.topicId}-path`} checked={pathId === option.id}
       onChange={() => { setError(""); updateTopicProgress(key, { activity: { pathId: option.id, response: "", feedback: null } }); }} />{option.label}</label>)}
     </fieldset><section className="card"><h2>{path.label}</h2><p>{path.prompt}</p>{path.scenario && <div className="hint"><h3>{path.label}</h3><p>{path.scenario}</p></div>}
       {path.example && <details key={`example-${pathId}`}><summary>See an example</summary><p>{path.example}</p></details>}
       <form onSubmit={submit}><label htmlFor={responseId}>Your answer</label><textarea id={responseId} required maxLength={2000} disabled={!ready || busy} value={response}
         onChange={(event) => updateTopicProgress(key, { activity: { pathId, response: event.target.value, feedback: null } })} />
-        <p className="eyebrow">{response.length}/2000 characters · Your draft is saved on this device.</p>
+        <p className="eyebrow">{response.length}/2000 characters · Your answer is saved on this device.</p>
         <button disabled={!ready || busy || !response.trim()}>{busy ? "Getting feedback…" : "Get feedback"}</button>
       </form><StuckHelp key={`help-${pathId}`} step={`activity-${pathId}`} topic={topic} /></section>
-    <div aria-live="polite" aria-busy={busy}>{error && <p role="alert">{error}</p>}{feedback && <section className="card" aria-labelledby="feedback-title"><h2 id="feedback-title">{feedback.completed ? "Activity completed" : "Let’s try a little more"}</h2>
+    <div className="activity-feedback" aria-live="polite" aria-busy={busy}>{error && <p role="alert">{error}</p>}{feedback && <Reveal><section className="card" aria-labelledby="feedback-title"><h2 id="feedback-title">{feedback.completed ? "Activity completed" : "Let’s try a little more"}</h2>
       {feedback.hint && <p className="hint">{feedback.hint}</p>}
       {feedback.completed && <><h3>Something you did well</h3>{feedback.strengths.map((entry) => <Entry key={entry.criterionId} entry={entry} basePath={topic.basePath} />)}<h3>Things to consider</h3>{feedback.toConsider.map((entry, index) => <Entry key={index} entry={entry} basePath={topic.basePath} />)}</>}
       <p><strong>Next step:</strong> {feedback.nextStep.label}</p>
       {feedback.mode !== "live" && <p className="eyebrow">{feedback.mode === "mock" ? "Demo feedback · based on the authored rubric" : "Demo fallback · live feedback is unavailable"}</p>}
-    </section>}</div><div className="actions">{feedback?.completed && <Link className="button" href={`${topic.basePath}/next`}>See my next steps</Link>}<Link href={topic.basePath}>Back to lesson</Link><Link href={`${topic.basePath}/next`}>Pause and see next steps</Link></div>
-  </>;
+    </section></Reveal>}</div><div className="actions">{feedback?.completed && <Link className="button" href={`${topic.basePath}/next`}>See my next steps</Link>}<Link href={topic.basePath}>Back to lesson</Link><Link href={`${topic.basePath}/next`}>Pause and see next steps</Link></div>
+  </div>;
 }

@@ -15,20 +15,24 @@ describe("content-driven static routes",()=>{
     expect(subjects()).toEqual(catalog.areas.flatMap(area=>area.subjects.map(subject=>({area:area.slug,subject:subject.slug})))); expect(subjects()).toHaveLength(14);
   });
   it("generates exactly the live topic params on lesson, activity and next pages",()=>{
-    const expected=[{area:"animal-farming",subject:"fish-farming",topic:"what-is-fish-farming"},{area:"animal-farming",subject:"fish-farming",topic:"water"}];
+    const expected=getCatalog().areas.flatMap(area=>area.subjects.filter(subject=>subject.status==="live").flatMap(subject=>getSubjectPath(subject.id).topics.filter(topic=>topic.status==="live").map(topic=>({area:area.slug,subject:subject.slug,topic:topic.slug}))));
     for(const generate of [topics,activities,nextSteps]) expect(generate()).toEqual(expected);
     for(const params of topics()) expect(getSubjectPath(params.subject).topics.find(topic=>topic.slug===params.topic)?.status).toBe("live");
   });
   it("resolves topic data, breadcrumbs and the next live topic from the path",()=>{
     const first=resolveLearningRoute("animal-farming","fish-farming","what-is-fish-farming");
     expect(first.context.basePath).toBe("/animal-farming/fish-farming/what-is-fish-farming");
-    expect(first.context.nextTopic).toEqual({title:"Water: do I have enough?",basePath:"/animal-farming/fish-farming/water"});
-    expect(resolveLearningRoute("animal-farming","fish-farming","water").context.nextTopic).toBeNull();
+    const live=getSubjectPath(first.subject.id).topics.filter(topic=>topic.status==="live");
+    for(const [index,topic] of live.entries()) {
+      const next=live[index+1];
+      expect(resolveLearningRoute(first.area.slug,first.subject.slug,topic.slug).context.nextTopic).toEqual(next ? {title:next.title,basePath:`${first.hubPath}/${next.slug}`} : null);
+    }
   });
   it("resolves coming-soon metadata without loading a lesson",()=>{
-    expect(resolveTopicRoute("animal-farming","fish-farming","meet-the-catfish").meta.status).toBe("coming-soon");
+    const soon=getSubjectPath("fish-farming").topics.find(topic=>topic.status==="coming-soon")!;
+    expect(resolveTopicRoute("animal-farming","fish-farming",soon.slug).meta.status).toBe("coming-soon");
     expect(resolveSubject("animal-farming","poultry").subject.status).toBe("coming-soon");
-    expect(()=>resolveLearningRoute("animal-farming","fish-farming","meet-the-catfish")).toThrow("NOT_FOUND");
+    expect(()=>resolveLearningRoute("animal-farming","fish-farming",soon.slug)).toThrow("NOT_FOUND");
   });
   it("rejects unknown and mismatched slugs",()=>{
     expect(()=>resolveArea("unknown")).toThrow("NOT_FOUND");

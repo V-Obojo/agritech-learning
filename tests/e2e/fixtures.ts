@@ -7,7 +7,11 @@ export const test=base.extend<{localOnly:void}>({
   localOnly:[async({page},use)=>{
     const errors:string[]=[];
     page.on("pageerror",error=>errors.push(error.message));
-    page.on("console",message=>{if(message.type()==="error") errors.push(message.text());});
+    page.on("console",message=>{
+      // The deliberately visited missing route has its not-found UI asserted.
+      const expected404=message.text().includes("404") && new URL(message.location().url || page.url()).pathname==="/unknown-page";
+      if(message.type()==="error" && !expected404) errors.push(message.text());
+    });
     await page.route("**/*",route=>{
       const hostname=new URL(route.request().url()).hostname;
       if(hostname==="localhost" || hostname==="127.0.0.1") return route.continue();
@@ -66,7 +70,20 @@ export async function submitActivity(page:Page,pathId:string,answer:string,topic
   await page.getByRole("button",{name:"Get feedback",exact:true}).click();
   const data=await (await response).json();expect(data.mode).toBe("mock");return data;
 }
+export async function openGuide(page:Page) {
+  await expect(page.getByRole("article")).toBeVisible();
+  const trigger=page.getByRole("button",{name:"Ask the guide",exact:true});
+  if(page.viewportSize()!.width<768) {
+    await trigger.click();
+    await expect(page.getByRole("dialog",{name:"Learning guide",exact:true})).toBeVisible();
+  }
+}
+export async function closeGuide(page:Page) {
+  const close=page.getByRole("button",{name:"Close guide",exact:true});
+  if(await close.isVisible()) await close.click();
+}
 export async function askGuide(page:Page,question:string,citation:string) {
+  await openGuide(page);
   const guide=page.getByRole("region",{name:"Ask the learning guide",exact:true});
   await guide.getByLabel("Your question").fill(question);
   const response=page.waitForResponse(response=>response.url().endsWith("/api/guide") && response.request().method()==="POST");
