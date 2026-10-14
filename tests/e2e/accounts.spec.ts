@@ -34,7 +34,10 @@ test("accounts: guest work merges, account survives sign-out/sign-in, and profil
 
 test("accounts: route protection, admin contact, inline validation, and generic bad-credentials error",async({page})=>{
   await page.goto("/dashboard");await expect(page).toHaveURL(/\/signin\?callbackUrl=/);await expect(page.getByRole("heading",{level:1,name:"Sign in",exact:true})).toBeVisible();
-  await page.getByRole("button",{name:"Forgot password?",exact:true}).click();await expect(page.getByRole("link",{name:catalog.product.supportContact,exact:true}).first()).toHaveAttribute("href",`mailto:${catalog.product.supportContact}`);
+  const forgot=page.getByRole("button",{name:"Forgot password?",exact:true});
+  // A streamed page can expose the button before its client handler is ready.
+  await expect(async()=>{if(await forgot.getAttribute("aria-expanded")==="false")await forgot.click();await expect(forgot).toHaveAttribute("aria-expanded","true",{timeout:500});}).toPass({timeout:10000});
+  await expect(page.getByRole("main").getByRole("link",{name:catalog.product.supportContact,exact:true})).toHaveAttribute("href",`mailto:${catalog.product.supportContact}`);
   await expect(page.getByText("Contact the admin to reset your password:",{exact:false})).toBeVisible();
   await signin(page,`missing-${randomUUID()}@example.test`,"WrongFixture12");await expect(page.getByRole("main").getByRole("alert")).toHaveText("Email or password is incorrect");
   await page.goto("/account");await expect(page).toHaveURL(/\/signin\?callbackUrl=/);

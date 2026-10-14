@@ -1,7 +1,7 @@
 import { test, expect, catalog, animalArea, fishPath, areaUrl, firstTopic, water, chooseIntention, openFishHub, answerCheck, askGuide, submitActivity, tundeAnswer, events, closeGuide, topicData } from "./fixtures";
 test("navigation: Ovayi Farm → fish hub → Tunde topic loop → Done → water guide → coming-soon pages",async({page})=>{
   await page.goto("/");
-  await expect(page.getByRole("heading",{name:catalog.product.name,exact:true})).toBeVisible();
+  await expect(page.getByRole("heading",{name:catalog.product.heroHeadline,exact:true})).toBeVisible();
   await expect(page.locator("header")).toContainText(`by ${catalog.product.parent}`);
   await expect(page.locator("a.navigation-card")).toHaveCount(3);
   for(const area of catalog.areas) await expect(page.getByRole("heading",{name:area.label,exact:true})).toBeVisible();

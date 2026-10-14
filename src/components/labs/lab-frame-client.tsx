@@ -43,13 +43,13 @@ export function LabFrameClient({lab,fallback,badge,media}:{lab:Lab;fallback?:Med
     const details={labId:lab.id,subjectId:lab.subjectId,topicId:lab.topicId};if(!previous)recordEvent("lab_started",details);recordEvent("lab_progress",details);if(result.completed&&!previous?.completed)recordEvent("lab_completed",details);
   }
   const Simulation=lab.type!=="model-viewer"?registry[lab.type]:null;
-  return <section id={lab.id} ref={frame} className={`lab-frame${full?" lab-expanded":""}`} aria-label={lab.title} data-lab-id={lab.id}>
+  return <section id={lab.id} ref={frame} className={`lab-frame lab-type-${lab.type}${full?" lab-expanded":""}`} aria-label={lab.title} data-lab-id={lab.id}>
     <header><p className="eyebrow">Interactive lab</p><h3>{lab.title}</h3><p>{lab.instructions}</p><button aria-pressed={full} onClick={async()=>{
       if(document.fullscreenElement===frame.current) {await document.exitFullscreen();return;}
       if(!full&&frame.current?.requestFullscreen) {try{await frame.current.requestFullscreen();return;}catch{/* Inline expansion also works when fullscreen is unavailable. */}}
       setFull(v=>!v);
     }}>{full?"Exit fullscreen":"Fullscreen lab"}</button></header>
-    <div className="lab-progress" aria-live="polite"><progress max={status.total} value={status.done} aria-label="Lab completion"/><p>{modelStatus&&lab.type==="model-viewer"?`${modelStatus.hotspots} / ${lab.completion.hotspotsVisited} hotspots · ${modelStatus.modes} / ${lab.completion.modesViewed} modes`:`${status.done} / ${status.total} steps`}</p>{saved?.completed&&<p className="lab-completed" role="status">Completed! <span className="lab-badge">{badge?.emoji} {badge?.label}</span></p>}</div>
+    <div className="lab-progress" aria-live="polite"><div className="lab-progress-track" role="progressbar" aria-valuemin={0} aria-valuemax={status.total} aria-valuenow={status.done} aria-label="Lab completion"><span className="lab-progress-fill" style={{width:`${status.done/status.total*100}%`}}/></div><p>{modelStatus&&lab.type==="model-viewer"?`${modelStatus.hotspots} / ${lab.completion.hotspotsVisited} hotspots · ${modelStatus.modes} / ${lab.completion.modesViewed} modes`:`${status.done} / ${status.total} steps`}</p>{saved?.completed&&<p className="lab-completed" role="status">Completed! <span className="lab-badge">{badge?.emoji} {badge?.label}</span></p>}</div>
     {lab.type==="model-viewer"?<ModelViewer lab={lab} fallback={fallback} onVisit={visit} ready={ready}/>:Simulation?<Simulation lab={lab} data={saved?.data} media={media} ready={ready} onChange={change}/>:<p className="hint">Coming in a later update</p>}
   </section>;
 }

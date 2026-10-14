@@ -1,0 +1,15 @@
+import {it,expect,vi} from "vitest";
+import {Vector3} from "three";
+vi.mock("server-only",()=>({}));
+import {listLabs} from "@/lib/content";
+import {modelLabSchema} from "@/lib/content/media-labs";
+import {buildCatfish} from "./catfish-geometry";
+import {morphPoint,crossSection,catfishMaterials} from "./catfish-surface";
+import {partPosition} from "./model-parts";
+import {citationText} from "./citation-text";
+const lab=modelLabSchema.parse(listLabs().find(l=>l.type==="model-viewer"));
+it("sweeps one continuous surface with a flattened head and compressed tail",()=>{const head=crossSection(-2),trunk=crossSection(-.3),tail=crossSection(2.2);expect(head.z/head.y).toBeGreaterThan(2);expect(trunk.y).toBeGreaterThan(head.y);expect(tail.z).toBeLessThan(tail.y);});
+it("morphs all anatomy coherently, shortening the trunk more than the head",()=>{const body=morphPoint(new Vector3(2.4,.3,.3)),head=morphPoint(new Vector3(-2.4,.2,.5));expect(body.x).toBeLessThan(1.5);expect(head.z).toBeGreaterThan(.6);for(const h of lab.hotspots)expect(partPosition(h.part,true)).toEqual(morphPoint(new Vector3(...partPosition(h.part))).toArray());});
+it("builds curved tapered barbels, seven rayed membranes and a real position/normal morph",()=>{const g=buildCatfish(lab.model.bodyColors);expect(g.barbels).toHaveLength(8);expect(g.body.morphAttributes.position?.[0]?.count).toBe(g.body.getAttribute("position").count);expect(g.body.morphAttributes.normal?.[0]?.count).toBe(g.body.getAttribute("normal").count);for(const fin of [g.dorsal,g.anal,g.tail,...g.paired]){expect(fin.rays.getAttribute("position").count).toBeGreaterThan(100);expect(fin.membrane.getAttribute("uv").count).toBeGreaterThan(80);}expect(g.paired.filter(p=>p.spine)).toHaveLength(2);expect(g.triangles).toBeGreaterThan(10000);expect(g.triangles).toBeLessThanOrEqual(20000);g.dispose();});
+it("marbled and membrane shader materials update without replacing geometry",()=>{const m=catfishMaterials(lab.model.bodyColors);m.update(1,0);expect(m.fins.opacity).toBe(.5);m.update(0,0);expect(m.fins.opacity).toBe(.86);expect(m.body.clearcoat).toBeGreaterThan(0);expect(m.body.customProgramCacheKey()).toContain("marbling");m.dispose();});
+it("citation formatting keeps prose and ordinary parentheses",()=>{expect(citationText("Example (wa-08). Use the authored formula (m²)." )).toBe("Example. Use the authored formula (m²).");});

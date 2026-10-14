@@ -65,7 +65,7 @@ export type Activity = z.infer<typeof activitySchema>;
 const availability = z.enum(["live", "coming-soon"]);
 export const catalogSchema = z.object({
   status: text,
-  product: z.object({ name: text, parent: text, tagline: text, pitch: text, region: text, heroEyebrow: text }),
+  product: z.object({ name: text, parent: text, tagline: text, pitch: text, region: text, heroEyebrow: text, heroHeadline: text, heroSubhead: text, supportContact: text }),
   intentions: z.array(z.object({ id: text, label: text })).min(1),
   areas: z.array(z.object({
     id: text, slug: text, label: text, blurb: text, status: availability,

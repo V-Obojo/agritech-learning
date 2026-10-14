@@ -1,9 +1,10 @@
-import { test, expect, startLesson, answerCheck, askGuide, submitActivity, activity, water, events, expectTopicMetrics } from "./fixtures";
+import { test, expect, startLesson, answerCheck, askGuide, closeGuide, submitActivity, activity, water, events, expectTopicMetrics } from "./fixtures";
 test("full loop: curious learner, cited guide, observe activity, next step and topic session metrics",async({page})=>{
   await startLesson(page);await answerCheck(page);
   await askGuide(page,"Why does the dry season matter?","wa-03");
   await page.getByRole("region",{name:"Ask the learning guide",exact:true}).getByRole("link",{name:/^wa-03/}).click();
   await expect(page).toHaveURL(/#wa-03$/);
+  await closeGuide(page);
   await page.getByRole("link",{name:"Try the activity",exact:true}).click();
   await submitActivity(page,"observe",activity.paths.find(path=>path.id==="observe")!.example!);
   await expect(page.getByRole("heading",{name:"Activity completed",exact:true})).toBeVisible();

@@ -14,7 +14,9 @@ export const test=base.extend<{localOnly:void}>({
       // The deliberately visited missing route has its not-found UI asserted.
       const expected404=message.text().includes("404") && new URL(message.location().url || page.url()).pathname==="/unknown-page";
       const expectedCredentialsFailure=message.text().includes("401") && new URL(message.location().url || page.url()).pathname==="/api/auth/callback/credentials";
-      if(message.type()==="error" && !expected404 && !expectedCredentialsFailure) errors.push(message.text());
+      const recoveryTest=test.info().file.endsWith("recovery.spec.ts"),requestPath=new URL(message.location().url || page.url()).pathname;
+      const expectedRecovery=recoveryTest&&((requestPath==="/api/guide"&&message.text().includes("ERR_INTERNET_DISCONNECTED"))||(["/api/auth/signup","/api/auth/callback/credentials"].includes(requestPath)&&message.text().includes("503")));
+      if(message.type()==="error" && !expected404 && !expectedCredentialsFailure && !expectedRecovery) errors.push(message.text());
     });
     await page.route("**/*",route=>{
       const hostname=new URL(route.request().url()).hostname;
@@ -77,7 +79,7 @@ export async function submitActivity(page:Page,pathId:string,answer:string,topic
 export async function openGuide(page:Page) {
   await expect(page.getByRole("article")).toBeVisible();
   const trigger=page.getByRole("button",{name:"Ask the guide",exact:true});
-  if(page.viewportSize()!.width<768) {
+  if(!(await page.getByRole("dialog",{name:"Learning guide",exact:true}).isVisible())) {
     await trigger.click();
     await expect(page.getByRole("dialog",{name:"Learning guide",exact:true})).toBeVisible();
   }

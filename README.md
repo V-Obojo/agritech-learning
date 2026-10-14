@@ -1,125 +1,143 @@
-# Ovayi Farm
+# Ovayi Farm · by Ovayi Foods
 
-**Ovayi Farm, by Ovayi Foods**, is a phone-first learning companion for curious beginners in Nigeria. Explore an area → subject path → topic lesson → source-grounded guide → inclusive activity → feedback → next steps. No sign-up, farm access or commitment to invest is needed.
+A responsive learning app for curious beginners in Nigeria. Guests can explore freely; optional accounts keep progress across visits. Choose an area, follow the fish-farming path, read a cited lesson, try a lab, ask the source-grounded guide, and complete an activity at your own pace.
 
-The catalog has **Animal farming**, **Crop farming** and **Agro-processing**. Fish farming is the live subject, with five authored topics. Two are available: **What is fish farming, and is it for me?** and **Water: do I have enough?** The other topics, subjects and areas are labelled coming soon.
+Four of the five fish topics are live: What is fish farming; Meet the African catfish; Water; Space and setup options. Time, costs and commitment, other subjects, Crop farming and Agro-processing remain coming soon.
 
-> **Draft content:** material in `content/` is sourced from public references and has not been reviewed by a fisheries expert. Lessons show the review note and sources. The guide answers only from the current topic's lesson chunks, with citations; unsupported questions receive an honest limitation and an authored next step.
+## See the app
+
+![Home and learning areas](docs/screenshots/home.png)
+![Procedural catfish and cited hotspots](docs/screenshots/catfish.png)
+![Personal learning dashboard](docs/screenshots/dashboard.png)
+
+These desktop screenshots come from the mock-mode browser journey. Mobile layouts are exercised at 375px, with additional overflow checks at 768, 1280 and 1440px.
+
+## Features
+
+- Credited local photos with a zoom/pan/rotate lightbox, source links and a full credits page.
+- Four hands-on labs: procedural 3D catfish, water-source simulator, pond builder and illustrated warning-sign observations.
+- Topic-specific understanding checks, a cited guide, inclusive activities, feedback and next steps.
+- Optional accounts with guest-progress merge, saved lab results, badges, Lagos-day streaks and a customizable dashboard.
+- Light/dark themes, reduced motion, keyboard controls, clear failure states and guest learning when accounts are unavailable.
 
 ## Setup
 
-Use Node.js 24 and npm. For a fresh checkout:
+Use Node.js 24 and npm. In a fresh checkout:
 
 ```powershell
 npm install
 Copy-Item .env.example .env.local
-$env:GUIDE_MODE = 'mock'
-npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). Keep an existing settings file when returning. Dependencies are already installed in the prepared hackathon workspace; automated phase work does not install packages or download browsers.
+Keep an existing `.env.local` when returning. It is private and ignored by Git. The prepared hackathon workspace already has dependencies and browsers; automated phase work does not install packages.
 
-## Mock and live modes
-
-- `GUIDE_MODE=mock` is the default. The guide retrieves deterministic lesson excerpts using authored topic synonyms; feedback uses that topic's rubric and model points. No API key or OpenAI call is needed.
-- Live mode requires `GUIDE_MODE=live`, `OPENAI_API_KEY` and `OPENAI_MODEL` set to a Responses API model supporting structured outputs. Configure these yourself in `.env.local`, never commit or share that file, and restart the server after changing settings.
-- A live-provider error uses the mock with `mode: "mock-fallback"`. Citations, rubric ids and next steps are checked against the requested topic; citations from another topic are invalid.
-- Unit and E2E tests explicitly use mock mode even if personal settings select live mode. Browser tests block external requests and assert mock API responses.
-
-## Scripts
-
-| Command | Purpose |
-|---|---|
-| `npm run dev` | Development server on port 3000 |
-| `npm run check` | Lint, typecheck and mock unit tests |
-| `npm run verify` | Check plus production build |
-| `npm run test` | Unit tests in mock mode |
-| `npm run test:e2e` | Build and serve on port 3100; seven mobile Playwright specs in mock mode |
-| `npm run build` | Production build |
-| `npm run start` | Serve the production build |
-
-On Windows, E2E uses the already-installed Microsoft Edge channel. Other platforms use preinstalled Playwright Chromium. The shared fixture enforces the 375px viewport, reports browser errors and blocks external requests. No browser download runs during tests.
-
-The Windows Codex sandbox has a documented Next.js build limitation. Run `npm run check` inside it and request approval for `npm run verify` and `npm run test:e2e` outside it. See [AGENTS.md](AGENTS.md) and [build evidence](harness/build-log.md).
-
-## Six-step demo
-
-This follows `tests/e2e/navigation.spec.ts`. Use mock mode for a repeatable demo; start with fresh app progress on the device.
-
-1. Open `/`. Show **Ovayi Farm**, **by Ovayi Foods**, the tagline and pitch, and the three area cards. Choose **I'm thinking about starting**. Open **Animal farming**, then **Fish farming**. Show the subject intro, five-topic path and three coming-soon topics; those topics are not links in the hub.
-2. Select **Start** to open **What is fish farming, and is it for me?** Show the draft warning and sources, answer the understanding check, then ask **What do I need to start fish farming?** Show the `wf-05` citation, which links to its lesson chunk.
-3. Select **Try the activity**. Choose **Think about someone else's situation**, read Tunde's fictional situation and submit: **Tunde works weekdays far from the site and has some savings. He should learn from an experienced farmer before investing.** Show completed feedback and chunk links, then **See my next steps**. Show **Next topic: Water: do I have enough?**
-4. Select **Back to Fish farming path**. The first topic is **Done**, and the primary action reads **Continue: Water: do I have enough?**
-5. Continue to the water lesson. Ask **Why does the dry season matter for a fish pond?** and show the `wa-03` citation. Use **Try the activity → Pause and see next steps** to show that water's session has its own check score and completion status. It does not inherit topic 1's completed activity.
-6. Return home and open **Crop farming** to show its coming-soon subjects and a way back. Open **Animal farming → Poultry** to show the friendly coming-soon page, the link back to the area and the available fish path.
-
-For additional demonstrations, the water topic offers observation, question-writing and Amina's fictional scenario. Submit **idk**, then tap **Stuck?** to reveal authored help; retry using an example or a scenario response. Ask **What dose of medicine should I give sick catfish?** to show the limitation and next step with no citations. Next-step pages offer a reminder preview explicitly labelled **Demo: reminders are not sent in this prototype** and a would-return poll. Reload or use the home **Continue where you left off** card to resume the last topic page. **Start over** on a next-step page clears this app's progress and event log.
-
-## Routes
-
-| Route | Page |
-|---|---|
-| `/` | Catalog home, intention choice and last-page resume |
-| `/[area]` | Area description and subject cards |
-| `/[area]/[subject]` | Subject hub or coming-soon page |
-| `/[area]/[subject]/[topic]` | Topic lesson, check, guide and authored help; coming-soon topics have a friendly view |
-| `/[area]/[subject]/[topic]/activity` | Inclusive topic activity and feedback |
-| `/[area]/[subject]/[topic]/next` | Topic session summary, next steps, optional reminder demo and return poll |
-| `/api/guide`, `/api/feedback`, `/api/help` | Topic-validated JSON POST APIs |
-
-Areas, subjects and live topic pages are generated from the catalog/path. Every non-home page has breadcrumbs. Unknown slugs show a page linking home. The old top-level `/lesson`, `/activity` and `/next` pages were removed.
-
-## Device progress and metrics
-
-`agri-progress-v2` stores a global intention, topic records keyed by `<subjectId>/<topicId>`, per-topic reminder choices, return preference and `lastPath`. Each topic record has viewed status, check answers, guide count, activity draft/feedback and completion. Home resumes the exact last topic page; the hub shows each topic's status. V1 progress is ignored. When localStorage is blocked, the app falls back to memory for the current page session.
-
-`agri-events-v1` stores timestamped local events. `area_opened` identifies the area; `subject_opened` identifies area and subject; `topic_opened` identifies area, subject and topic. Topic learning events (`lesson_viewed`, `check_answered`, `guide_asked`, `guide_unsupported`, `help_requested`, `activity_submitted`, `activity_completed`, `would_return`) carry `subjectId` and `topicId`. The intention choice is global. Navigation opens record page visits; `lesson_viewed` is recorded once per saved topic. Retries and changed choices append events. Older topic events without identifiers are ignored while valid records are kept.
-
-Events contain small choice/status fields, not learner question or response text, and are never sent to an analytics service. **Your session** shows the current topic's completed activity and check score, plus the global would-return preference. These local self-reports do not establish retention.
-
-## Content and project layout
-
-- `content/catalog.json`: product, intentions, areas and subjects.
-- `content/sources.json`: shared sources.
-- `content/<subject.path>/path.json`: subject intro and ordered topic metadata.
-- `content/<subject.path>/<topic-id>/{lesson.md,topic.json,activity.json}`: lesson chunks, topic configuration and activity/rubric for each live topic.
-- `src/app/`: content-driven pages and API handlers.
-- `src/components/`: small interactive learning and navigation components.
-- `src/lib/content/`: validated loaders, lesson parser and integrity checks.
-- `src/lib/guide/`, `src/lib/feedback/`: mock/live providers and post-validation.
-- `src/lib/progress.ts`, `src/lib/metrics.ts`: device progress and local events.
-- `tests/e2e/`: navigation, full water loop, no farm access, stuck help, unsupported question, resume/reset and mobile layout.
-- `tests/manual/`: development smoke scripts, including the Phase 07 journey.
-- `harness/`: phase specifications and observed evidence.
-
-Humans maintain `content/`; automated agents treat it as read-only. Follow [content/README.md](content/README.md) for metadata, chunk headings, source ids, references and topic layout. Keep ids stable, cite known sources and keep config/activity references local to the topic. Do not add technical prescriptions without cited support. Run integrity/unit tests and both verification suites after a human content edit. Agricultural material still needs expert review.
-
-Product scope: [agritech-learning-brainstorm.md](agritech-learning-brainstorm.md). Phase status: [PLANS.md](PLANS.md).
-
-## Known limitations
-
-Only two fish topics are live; the other three topics and all other subjects are coming soon. Content is draft, English-only and not expert-reviewed. Mock test success does not establish live model accuracy; the human still needs to run the live smoke test. There are no live reminders, accounts, shared progress, offline caching, full-cycle curriculum or live diagnosis. Device storage can be blocked or cleared. Willingness to return is a local self-report: **long-term retention is unproven**.
-
-Additional topics, translations and other features need content review and learner validation. Deployment and GitHub push remain human actions requiring approval.
-
-
-## Set up accounts locally
-
-Accounts are optional; guest lessons remain available. Account pages require a configured database and an auth secret. The app fails with a setup message when NEXTAUTH_SECRET is missing and never creates a deployment secret for you. Do not commit or share secrets.
-
-Run these commands yourself in PowerShell from the project folder. The first command captures the generated value in the environment without printing it. Keep the same secret across restarts so existing sessions remain valid.
+Set up accounts locally with these commands in the project folder. The random secret is captured without printing it:
 
 ```powershell
 $env:NEXTAUTH_SECRET = node -e "process.stdout.write(require('node:crypto').randomBytes(32).toString('base64url'))"
-$env:NEXTAUTH_URL = "http://localhost:3000"
-$env:DATABASE_URL = "file:./data/ovayi.db"
+$env:NEXTAUTH_URL = 'http://localhost:3000'
+$env:DATABASE_URL = 'file:./data/ovayi.db'
+$env:GUIDE_MODE = 'mock'
 New-Item -ItemType Directory -Force data | Out-Null
 npm run db:migrate
 npm run dev
 ```
 
-For later sessions, you maintain `.env.local` yourself, using `.env.example` as the variable reference; keep its values private. Next.js loads that file for the app. Drizzle commands use the current process environment, so set DATABASE_URL in the terminal before migrating. The agent does not read or edit `.env.local`. DATABASE_AUTH_TOKEN is only needed for a remote Turso/libsql database; local SQLite needs no token. The runtime creates parent directories for local file URLs.
+Open [localhost:3000](http://localhost:3000). Keep the same `NEXTAUTH_SECRET` across restarts. Save the captured value privately in your own `.env.local` for later sessions; never print, commit or share it. Drizzle CLI uses process environment variables, so set `DATABASE_URL` in the terminal before running local migrations.
 
-Sign up or sign in to merge guest work into the account. Guest progress is cleared only after the merge and event transfer succeed. Account work stays out of guest localStorage, refreshes from the server, and saves after about a second; failed saves keep the current work available and offer a retry. Signing out flushes pending changes, then returns to guest learning. The account page edits profile, state, intention and theme, changes passwords using the current password, and deletes the account and related rows after typing DELETE. Forgot password provides the authored admin contact; no reset email is sent. Dashboard customization remains Phase 11 work.
+The variable reference is [.env.example](.env.example): `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `DATABASE_URL`, optional remote `DATABASE_AUTH_TOKEN`, `GUIDE_MODE`, and optional `OPENAI_API_KEY` / `OPENAI_MODEL`. Server credentials must never use a `NEXT_PUBLIC_` prefix. Missing account configuration produces a friendly fallback; guest lessons remain available.
 
-`npm run test` uses migrated temporary SQLite files for account tests. `npm run test:e2e` starts a fresh migrated temporary database and an explicitly test-only auth configuration, overriding deployment database credentials. No live guide calls, real deployment secrets, or production database files are used by these tests. On Windows, the native SQLite library may retain a temporary file handle until its test worker exits; temporary fixtures stay in the OS temp directory rather than blocking cleanup.
+## Mock vs live guide
+
+`GUIDE_MODE=mock` is the default: deterministic topic excerpts and rubric feedback, with no API key or external AI call. For live mode, set `GUIDE_MODE=live`, `OPENAI_API_KEY` and `OPENAI_MODEL` in your private environment, then restart. The configured model must support the Responses API structured output used by the existing provider.
+
+The guide only answers from the requested topic's chunks. Citations, rubric ids and next steps are validated against that topic. Unsupported questions get an honest limitation and an authored next step. A live-provider failure uses the labelled mock fallback. A failed browser request retains the question and offers **Retry guide**. All tests explicitly use mock mode.
+
+## Accounts and data
+
+Sign up midway through a lesson to merge device progress and learning events into the account. Guest stores clear only after both transfers succeed. Signed-in saves are debounced; failed saves retain current work in memory and offer retry. Signing out flushes pending work; signing back in restores account progress.
+
+The database holds users, topic/check/activity progress, lab results, events, guide history and dashboard preferences. Passwords use bcrypt hashes; sessions use next-auth JWTs. Account API routes validate requests and only read/write the signed-in user's rows. `/account` edits profile, state, intention and theme, changes passwords and deletes the account together with its data.
+
+Guests use device storage (`agri-progress-v2`, `agri-events-v1`); blocked storage falls back to memory for that page session. Account work stays out of guest storage. Themes persist on the device and, when signed in, in the account. Events contain small identifiers/status fields rather than question or activity text, and are not sent to an analytics service.
+
+The dashboard shows continue learning, topic progress, Lagos streak/calendar, badges, activity, reading-time estimates, reflections, guide history, labs, checks and profile. Customize it by hiding widgets or reordering them with handles or labelled arrow buttons; the layout persists.
+
+## Labs
+
+| Lab | Interaction | Completion |
+|---|---|---|
+| Catfish model | Orbit/zoom, view presets, auto-rotate, body-part hotspots, adult/fingerling modes | Authored hotspot and mode counts |
+| Water-source simulator | Sources/photos, animated year, supply vs need, dry shortfalls, cited questions | Three sources explored and both questions correct |
+| Pond builder | Snap/drag SVG sides, depth stick, numeric dimensions, area/volume/litres, references and setup types | Two authored challenges |
+| Spot the warning signs | Animated pond scenes, signs and neutral elements, cited explanations and remedy | All three scenes; scored results |
+
+All results save under `progress.labs` and feed badges. [Labs](/labs) provides lightweight previews and links into lessons. The 3D geometry is procedural and local (4,660 rendered triangles in the current test); no remote model is downloaded. WebGL-unavailable devices get a credited illustration and equivalent hotspot list. Labs and the dashboard chart load lazily. All lab controls work by keyboard; motion respects the system preference.
+
+Water numbers are labelled fictional examples. Pond calculations use the authored simplified box formula and disclaimer about sloping banks. These tools do not predict real farm conditions or provide engineering/cost recommendations.
+
+## Content, credits and licenses
+
+Humans maintain `content/` and `public/media/`; automated phase work treats them as read-only. Follow [content/README.md](content/README.md) for catalog/path/topic schemas, lesson chunks, `::figure` / `::lab` directives and media/lab/badge registries. Keep ids stable, cite known sources and run integrity tests and browser gates after edits. Technical agricultural claims require cited support.
+
+[Credits](/credits) lists every media item and reference. The ten local images use CC BY-SA 3.0/4.0, CC0 or public-domain licenses as recorded in [media.json](content/media.json). Keep attribution, source and license links with each image; respect share-alike requirements for adapted CC BY-SA images. Source references live in [sources.json](content/sources.json). No blanket license is implied for third-party media or referenced publications.
+
+**Internal review note:** the material is sourced but has not been reviewed by a fisheries expert. Expert review and learner validation remain necessary. This note belongs in project documentation, not the learning UI.
+
+## Testing
+
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Development server, port 3000 |
+| `npm run test` | Mock unit/integrity tests; account tests use temporary databases |
+| `npm run check` | Lint + generated route types + TypeScript + unit tests |
+| `npm run verify` | Check + production build |
+| `npm run test:e2e` | Production build/server on port 3100, mock mode, fresh migrated temporary database |
+| `npm run db:generate` / `npm run db:migrate` | Generate / apply local Drizzle migrations |
+| `npm run build` / `npm run start` | Build / serve production |
+
+Playwright runs desktop (1440px) and touch/mobile (375px) projects. Windows uses installed Edge; other platforms use preinstalled Chromium. Browser fixtures block external requests and fail unexpected console/page errors. The full journey proves guest lesson → signup/merge → all four labs → completed topics/dashboard → saved customization → sign out/in → persisted theme. Separate cases cover keyboard-only labs, credited media/lightbox, WebGL fallback, live-layout widths, recovery and engine/chart/lab loading isolation. Unit tests compute normal-text contrast ≥4.5:1 for both themes.
+
+Reports/screenshots are in ignored `test-results/`; selected demo images are retained in `docs/screenshots/`. Production route JavaScript measurements include uncompressed and gzip sizes with the method recorded in the [build log](harness/build-log.md). Next.js 16.4's build output does not provide the old First Load JS column; measurements are identified explicitly rather than presented as build-reported values.
+
+The Windows Codex sandbox cannot reliably build Next.js or run Playwright. Iterate with `npm run check` inside it; run verification/browser gates outside it with approval. Do not change the app to bypass this environment issue. See [AGENTS.md](AGENTS.md). Temporary SQLite files may remain in the OS temp directory on Windows until native handles close. Tests never use `data/ovayi.db` or real deployment credentials.
+
+## Deploy to Vercel + Turso (human steps)
+
+These instructions are for the human. No database creation, remote migration, push or deployment was executed by the agent.
+
+1. Finish `npm run verify` and `npm run test:e2e`. Review the diff, and arrange an approved repository push yourself. Use a separate database for preview testing.
+2. Install/authenticate the Turso CLI yourself following [Turso CLI installation](https://docs.turso.tech/cli/installation). Create a database and capture its URL/token in your terminal:
+
+   ```powershell
+   turso auth login
+   turso db create ovayi-farm
+   $env:DATABASE_URL = turso db show ovayi-farm --url
+   $env:DATABASE_AUTH_TOKEN = turso db tokens create ovayi-farm
+   ```
+
+   Store the token privately; do not echo it or paste it into source control. The URL should be `libsql://…`, not a local `file:` path. See [create](https://docs.turso.tech/cli/db/create), [URL lookup](https://docs.turso.tech/sdk/rust), and [database tokens](https://docs.turso.tech/cli/db/tokens/create).
+3. Apply the repository's existing migrations to that remote database using the installed libsql/Drizzle runtime. The local `db:migrate` script's SQLite CLI configuration has no remote token field; use this authenticated remote command instead. Verify the target URL privately before running it. This changes the remote schema:
+
+   ```powershell
+   @'
+   import {createClient} from '@libsql/client';
+   import {drizzle} from 'drizzle-orm/libsql';
+   import {migrate} from 'drizzle-orm/libsql/migrator';
+   const client=createClient({url:process.env.DATABASE_URL,authToken:process.env.DATABASE_AUTH_TOKEN});
+   try { await migrate(drizzle(client),{migrationsFolder:'drizzle'}); }
+   finally { client.close(); }
+   '@ | node --input-type=module
+   ```
+
+   Run this from the repository root. Migrations are applied before the first account request; the app does not automatically migrate production.
+4. Import the repository into Vercel, choose the Next.js framework preset and [Node.js 24](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions), and use the repository root. Keep the standard `npm run build` command.
+5. Configure server environment variables for the intended Vercel environment: `DATABASE_URL`, `DATABASE_AUTH_TOKEN`, a newly generated private `NEXTAUTH_SECRET`, `NEXTAUTH_URL` matching the final HTTPS origin, and `GUIDE_MODE=mock` for the first demo. Generate/capture the secret using the setup command above; preserve it across deployments. If enabling live AI later, add `OPENAI_API_KEY` and `OPENAI_MODEL` privately. Never prefix secrets with `NEXT_PUBLIC_`. Follow [Vercel environment variables](https://vercel.com/docs/environment-variables).
+6. Deploy from Vercel yourself. If the final origin changes, update `NEXTAUTH_URL` and redeploy; environment changes apply to a new deployment. See [managing environment variables](https://vercel.com/docs/environment-variables/managing-environment-variables). Keep preview environments on a separate Turso database and secret.
+7. Smoke-test HTTPS signup/signin, guest merge, a saved lab, dashboard customization, signout/signin and image credits. Confirm the mocked guide works before choosing live mode. Retain private backups/token rotation procedures for the database.
+
+## Known limitations
+
+English only; four live fish topics and one coming soon. No email delivery or email password reset: **Forgot password** links to the authored admin contact. No OAuth, payments, peer groups, offline/PWA caching, translations, live reminders or diagnosis. Reminder controls are explicitly demo-only. Saved progress and streaks are activity measures, not evidence of long-term retention. Mock success does not establish live-model accuracy.
+
+The human handles expert review, production-secret management, remote migrations, push and deployment. Project scope: [product spec](agritech-learning-brainstorm.md), [outcomes](GOALS.md), [phase status](PLANS.md), [verification evidence](harness/build-log.md).

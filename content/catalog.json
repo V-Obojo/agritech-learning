@@ -1,13 +1,15 @@
 {
   "status": "draft-unreviewed",
   "product": {
-    "name": "Ovayi Farm",
+    "name": "Stars Farming Academy",
     "parent": "Ovayi Foods",
-    "tagline": "Learn farming at your own pace, one practical step at a time.",
-    "pitch": "Explore a farming activity, understand what it really involves, and find a sensible next step. Start learning right away, or create a free account to save your progress, earn badges and track your journey.",
+    "tagline": "Learn farming hands-on, without spending a kobo to start.",
+    "pitch": "A quiet place to look around, try things, and figure out whether a farming idea actually fits your life — before you spend money or land on it.",
     "region": "Nigeria",
     "supportContact": "ovayifoods@gmail.com",
-    "heroEyebrow": "A little curiosity. A world of possibilities."
+    "heroEyebrow": "For curious beginners in Nigeria",
+    "heroHeadline": "Think it through before you spend a kobo.",
+    "heroSubhead": "Short lessons, hands-on labs, and an honest AI guide. You can finish an evening with it and know whether to keep going."
   },
   "intentions": [
     {

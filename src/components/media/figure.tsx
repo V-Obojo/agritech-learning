@@ -9,7 +9,7 @@ export function Credit({media}:{media:Media}) {
 }
 export function Figure({media}:{media:Media}) {
   const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement>(null);
-  const [open,setOpen]=useState(false),[view,setView]=useState({zoom:1,x:0,y:0,angle:0});
+  const [open,setOpen]=useState(false),[rotationOpen,setRotationOpen]=useState(false),[view,setView]=useState({zoom:1,x:0,y:0,angle:0});
   const points=useRef(new Map<number,{x:number;y:number}>()),lastTap=useRef(0);
   const reset=()=>setView({zoom:1,x:0,y:0,angle:0});
   const zoom=(factor:number)=>setView(v=>({...v,zoom:Math.max(.5,Math.min(6,v.zoom*factor))}));
@@ -31,7 +31,7 @@ export function Figure({media}:{media:Media}) {
       if(key.toLowerCase()==="r") {event.preventDefault();reset();}
       if(key.startsWith("Arrow")&&!(event.target instanceof HTMLInputElement)) {event.preventDefault();setView(v=>({...v,x:v.x+(key==="ArrowLeft"?-30:key==="ArrowRight"?30:0),y:v.y+(key==="ArrowUp"?-30:key==="ArrowDown"?30:0)}));}
     }}>
-      {open&&<div className="lightbox-content"><div className="media-toolbar"><button autoFocus onClick={close}>Close image viewer</button><button aria-label="Zoom in" onClick={()=>zoom(1.2)}>+</button><button aria-label="Zoom out" onClick={()=>zoom(1/1.2)}>−</button><button aria-label="Rotate left" onClick={()=>setView(v=>({...v,angle:v.angle-90}))}>↶</button><button aria-label="Rotate right" onClick={()=>setView(v=>({...v,angle:v.angle+90}))}>↷</button><button onClick={reset}>Reset image</button><label>Rotation <input type="range" aria-label="Free rotation" min={-180} max={180} value={((view.angle+180)%360+360)%360-180} onChange={e=>setView(v=>({...v,angle:Number(e.target.value)}))}/></label></div>
+      {open&&<div className="lightbox-content"><div className="media-toolbar"><button autoFocus aria-label="Close image viewer" title="Close image viewer" onClick={close}>×</button><button aria-label="Zoom in" title="Zoom in" onClick={()=>zoom(1.2)}>+</button><button aria-label="Zoom out" title="Zoom out" onClick={()=>zoom(1/1.2)}>−</button><button aria-label="Rotate left" title="Rotate left" onClick={()=>setView(v=>({...v,angle:v.angle-90}))}>↶</button><button aria-label="Rotate right" title="Rotate right" onClick={()=>setView(v=>({...v,angle:v.angle+90}))}>↷</button><button aria-label="Reset image" title="Reset image" onClick={reset}>↺</button><div className="rotation-control" data-open={rotationOpen}><button className="rotation-toggle" aria-label="Adjust rotation" title="Adjust rotation" aria-expanded={rotationOpen} onClick={()=>setRotationOpen(v=>!v)}>⤾</button><label><span>Rotation</span><input type="range" aria-label="Free rotation" min={-180} max={180} value={((view.angle+180)%360+360)%360-180} onChange={e=>setView(v=>({...v,angle:Number(e.target.value)}))}/></label></div></div>
       <div className="lightbox-stage" onWheel={e=>zoom(e.deltaY<0?1.1:1/1.1)} onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);points.current.set(e.pointerId,{x:e.clientX,y:e.clientY});const now=Date.now();if(e.pointerType==="touch"&&points.current.size===1&&now-lastTap.current<300) zoom(1.5);lastTap.current=now;}} onDoubleClick={()=>zoom(1.5)} onPointerMove={e=>{
         const old=points.current.get(e.pointerId);if(!old) return;
         const other=[...points.current.entries()].find(([id])=>id!==e.pointerId)?.[1];

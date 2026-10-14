@@ -1,0 +1,30 @@
+import {readFileSync,writeFileSync,existsSync,statSync} from "node:fs";
+import {execFileSync} from "node:child_process";
+import {createHash} from "node:crypto";
+import assert from "node:assert/strict";
+const directory="test-results/phase-14",last=JSON.parse(readFileSync("test-results/.last-run.json","utf8"));
+assert.equal(last.status,"passed");assert.deepEqual(last.failedTests,[]);
+const e2e=JSON.parse(readFileSync(`${directory}/e2e-summary.json`,'utf8'));assert.equal(e2e.command,'npm run test:e2e');assert.equal(e2e.exitCode,0);assert.equal(e2e.passed,76);assert.equal(e2e.projects['desktop-chromium'],38);assert.equal(e2e.projects['mobile-chromium'],38);
+const css=readFileSync("src/app/globals.css","utf8"),blocks=[...css.matchAll(/:root(?:\[data-theme=dark\])?\s*\{([^}]+)\}/g)];
+const tokens=block=>Object.fromEntries([...block.matchAll(/--([\w-]+):\s*(#[\da-f]{6})/gi)].map(m=>[m[1],m[2]]));
+const light=tokens(blocks[0][1]),dark={...light,...tokens(blocks[1][1])};
+const lum=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((n,v,i)=>n+v*[.2126,.7152,.0722][i],0);
+const ratio=(a,b)=>{const l=[lum(a),lum(b)].sort((a,b)=>b-a);return (l[0]+.05)/(l[1]+.05);};
+const pairs=[...['background','surface','green-soft','callout'].flatMap(bg=>['foreground','muted','green','soil','amber'].map(fg=>[fg,bg])),['button-text','green']];
+const contrast=Object.fromEntries(Object.entries({light,dark}).map(([theme,palette])=>{const results=pairs.map(([fg,bg])=>({foreground:fg,background:bg,ratio:ratio(palette[fg],palette[bg])}));assert(results.every(r=>r.ratio>=4.5));return [theme,{minimum:Math.min(...results.map(r=>r.ratio)),pairs:results}];}));
+const readme=readFileSync("README.md","utf8"),headings=['See the app','Features','Setup','Mock vs live guide','Accounts and data','Labs','Content, credits and licenses','Testing','Deploy to Vercel + Turso (human steps)','Known limitations'];
+for(const h of headings)assert(readme.includes(`## ${h}`));
+const images=[['home.png',`${directory}/desktop-chromium-home.png`],['catfish.png','test-results/phase-12/desktop-chromium-adult.png'],['dashboard.png',`${directory}/desktop-chromium-dashboard.png`]].map(([name,original])=>{
+  const file=`docs/screenshots/${name}`;assert(existsSync(file));assert(statSync(file).size<500000);
+  const hash=path=>createHash('sha256').update(readFileSync(path)).digest('hex');assert.equal(hash(file),hash(original));assert(readme.includes(file));return {file,bytes:statSync(file).size,source:original};
+});
+const tracked=execFileSync('git',['ls-files','-z'],{encoding:'utf8'}).split('\0').filter(Boolean),bad=tracked.filter(p=>/(^|\/)\.env(?:\..*)?\.local$|(^|\/)data\/|\.(?:db|sqlite3?)(?:-|$)/i.test(p));assert.deepEqual(bad,[]);
+assert(!existsSync('src/components/draft-banner.tsx'));assert(!execFileSync('git',['diff','--numstat','--','content','public/media'],{encoding:'utf8'}).trim());
+const reports=Object.fromEntries(['desktop-chromium','mobile-chromium'].map(project=>[project,JSON.parse(readFileSync(`${directory}/${project}-performance.json`,'utf8'))]));
+const desktop=reports['desktop-chromium'].rows,mobile=reports['mobile-chromium'].rows;assert.equal(desktop.length,38);assert.equal(mobile.length,38);
+for(const row of desktop){const other=mobile.find(r=>r.route===row.route);assert(other);assert.deepEqual([...row.engines].sort(),[...other.engines].sort());}
+const table=['| Route | Desktop JS KiB | Mobile JS KiB | Desktop gzip KiB | Mobile gzip KiB | Lazy code |','|---|---:|---:|---:|---:|---|',...desktop.map(r=>{const phone=mobile.find(p=>p.route===r.route);return `| ${r.route} | ${r.jsKiB} | ${phone.jsKiB} | ${r.gzipKiB} | ${phone.gzipKiB} | ${r.engines.join(', ')||'none'} |`;})].join('\n');
+writeFileSync(`${directory}/first-load-js.md`,table+'\n');
+const audit={lastRun:last,e2e,contrast,readmeChecklist:headings,screenshots:images,noTrackedSecretsOrDatabases:true,contentAndMediaUnchanged:true,deadBannerRemoved:true,measuredRoutes:desktop.length,firstLoadJsMethod:reports['desktop-chromium'].method,routesOver250KiBGzip:desktop.filter(r=>r.gzipKiB>250).map(r=>({route:r.route,gzipKiB:r.gzipKiB,engines:r.engines}))};
+writeFileSync(`${directory}/audit.json`,JSON.stringify(audit,null,2));
+console.log(JSON.stringify({contrastMinimum:{light:contrast.light.minimum,dark:contrast.dark.minimum},screenshots:images,measuredRoutes:desktop.length,trackedSensitiveFiles:bad,readmeChecklist:headings}));

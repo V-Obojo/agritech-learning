@@ -24,7 +24,7 @@ test("all page types fit 375, 768, 1280 and 1440; save desktop and phone views",
       await expect(page.locator("main h1")).toBeVisible();
       await expect(page.locator("main[aria-busy=true]")).toHaveCount(0);
       if(name.startsWith("lesson-")) {
-        const columns=width>=1280 ? 3 : width>=768 ? 2 : 1;
+        const columns=width>=1024 ? 2 : 1;
         const template=await page.locator(".lesson-layout").evaluate(element=>getComputedStyle(element).gridTemplateColumns);
         expect(template.split(" ")).toHaveLength(columns);
       }
@@ -37,7 +37,7 @@ test("all page types fit 375, 768, 1280 and 1440; save desktop and phone views",
 
 test("home identity, single up next, labs, credits, navigation and live lessons",async({page})=>{
   await page.goto("/");
-  await expect(page.getByRole("heading",{level:1,name:catalog.product.name,exact:true})).toHaveCount(1);
+  await expect(page.getByRole("heading",{level:1,name:catalog.product.heroHeadline,exact:true})).toHaveCount(1);
   expect((await page.getByRole("banner").getByRole("link",{name:catalog.product.name,exact:true}).boundingBox())!.height).toBeGreaterThanOrEqual(44);
   await expect(page.locator("main")).not.toContainText(`by ${catalog.product.parent}`);
   await expect(page.getByRole("link",{name:"Start learning",exact:false})).toHaveAttribute("href",areaUrl);
@@ -52,10 +52,10 @@ test("home identity, single up next, labs, credits, navigation and live lessons"
     expect((await firstChunk.getByRole("link").first().boundingBox())!.height).toBeGreaterThanOrEqual(44);
     await expect(page.locator("main")).not.toContainText(/::figure|::lab/);
     const width=page.viewportSize()!.width;
-    await expect(page.locator(".lesson-layout")).toHaveCSS("grid-template-columns",width>=1280 ? /^\S+ \S+ \S+$/ : /^\S+$/);
+    await expect(page.locator(".lesson-layout")).toHaveCSS("grid-template-columns",width>=1024 ? /^\S+ \S+$/ : /^\S+$/);
     await openGuide(page);
     await expect(page.getByRole("region",{name:"Ask the learning guide",exact:true})).toBeVisible();
-    if(width<768) {
+    {
       await expect(page.getByRole("dialog",{name:"Learning guide",exact:true})).toBeVisible();
       if(meta.order===1) await page.screenshot({path:"test-results/phase-09/guide-sheet-375.png",animations:"disabled"});
       await page.keyboard.press("Escape");

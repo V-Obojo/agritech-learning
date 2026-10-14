@@ -238,3 +238,16 @@ Iteration: run `npm run check` after each change and fix the first failing check
 Blocked: stop and log in harness/build-log.md.
 Done: append a "Phase 13.1" evidence entry to harness/build-log.md, update PLANS.md, summarize, and stop. Do not start Phase 14.
 ```
+
+## Phase 13.2: New hero, proper footer, floating guide button (run before push/deploy)
+
+```
+/goal Complete Phase 13.2 exactly as specified in harness/build/phase-13-2-hero-footer-fab.md.
+Outcome: product name "Stars Farming Academy" shows in the nav (unchanged) but the home hero uses the new heroHeadline / heroSubhead instead of the name; a proper four-column desktop footer (Learn, Account, About, brand) that collapses on phones; and the lesson "Ask the guide" lives in a floating action button at the bottom-right that opens the guide in a side panel on desktop or a bottom sheet on phones (focus-trapped dialog, Esc closes, citation chips still work).
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval) pass on both projects with the acceptance cases from the phase file. Save screenshots under test-results/phase-13-2/.
+Constraints: AGENTS.md hard rules. content/ and public/media/ are read-only (new product fields already exist). No new deps. Keep the guide API and behavior.
+Boundaries: src/lib/content/schemas.ts, src/components/welcome-flow.tsx, src/components/site-footer.tsx, src/components/site-nav.tsx (only if needed), src/components/guide-panel.tsx, src/components/lesson-tools.tsx, src/components/guide-fab.tsx (new), src/app/globals.css, src/app/[area]/[subject]/[topic]/page.tsx, tests/**.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run verify/e2e outside the sandbox.
+Blocked: stop and log in harness/build-log.md.
+Done: append a "Phase 13.2" evidence entry to harness/build-log.md, update PLANS.md, summarize, and stop.
+```

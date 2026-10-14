@@ -8,9 +8,10 @@ async function signup(page:import("@playwright/test").Page) {
   await page.goto("/signup");await page.getByLabel("Name",{exact:true}).fill("Growing Learner");await page.getByLabel("Email",{exact:true}).fill(`dashboard-${randomUUID()}@example.test`);await page.getByLabel("Password",{exact:true}).fill("DashboardFixture12");await page.getByRole("button",{name:"Create account",exact:true}).click();await expect(page).toHaveURL("/dashboard");await expect(page.getByRole("heading",{name:"Your progress",exact:true})).toBeVisible();
 }
 test("dashboard: completion, badges, streak, saved customization, keyboard/pointer ordering and reset",async({page},testInfo)=>{
-  await signup(page);await page.goto(firstTopic.url);await answerCheck(page,firstTopic);
+  await signup(page);await page.goto(firstTopic.url);
   const firstBadge=badgesJson.badges.find(b=>b.rule.type==="first-topic-started")!,completedBadge=badgesJson.badges.find(b=>b.rule.type==="topic-complete"&&"topicId" in b.rule&&b.rule.topicId===firstTopic.meta.id)!;
   await expect(page.getByRole("status").filter({hasText:`Badge earned: ${firstBadge.label}`})).toBeVisible();
+  await answerCheck(page,firstTopic);
   await page.goto(`${firstTopic.url}/activity`);const path=firstTopic.activity.paths[0];const result=await submitActivity(page,path.id,path.example!,firstTopic);expect(result.completed).toBe(true);
   await expect(page.getByRole("status").filter({hasText:`Badge earned: ${completedBadge.label}`})).toBeVisible();
   await expect.poll(async()=>{const p=await (await page.request.get("/api/me/progress")).json();return Boolean(p.topics[firstTopic.key]?.completed&&p.celebratedBadges[completedBadge.id]);}).toBe(true);
