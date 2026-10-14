@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Fish Farming Basics",
@@ -10,7 +11,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <a className="skip-link" href="#main">Skip to content</a>
+        <header className="site-header"><Link href="/">Fish Farming Basics</Link><span>Learn at your pace</span></header>
+        {children}
+        <footer className="site-footer">No sign-up. Your progress stays on this device when storage is available.</footer>
+      </body>
     </html>
   );
 }
