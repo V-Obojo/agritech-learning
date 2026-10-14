@@ -13,6 +13,7 @@ Ordered phases. Run **one Codex `/goal` per phase** (texts in `PROMPTS.md`). The
 | 11 | Customizable dashboard, streaks, badges | `harness/build/phase-11-dashboard.md` | 2h | Complete |
 | 12 | Lesson media, lightbox, lab framework + 3D catfish | `harness/build/phase-12-media-3d.md` | 3h | Complete |
 | 13 | Simulators: water source, pond builder, spot the signs | `harness/build/phase-13-simulators.md` | 3h | Complete |
+| 13.1 | Lab and media polish (review fix-up) | `harness/build/phase-13-1-lab-polish.md` | 1.5h | Not started |
 | 14 | Full-journey e2e, performance, a11y, docs | `harness/build/phase-14-polish-e2e.md` | 2h | Not started |
 | — | Deploy (Vercel + Turso) with guidance, push (human, approval) | n/a | 30m | Not started |
 

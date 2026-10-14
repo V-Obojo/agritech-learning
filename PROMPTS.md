@@ -225,3 +225,16 @@ Iteration: run `npm run check` after each change and fix the first failing check
 Blocked: stop and log in harness/build-log.md.
 Done: append a "Phase 09.1" evidence entry to harness/build-log.md, summarize, and stop. Do not start Phase 10.
 ```
+
+## Phase 13.1: Lab and media polish (run before Phase 14)
+
+```
+/goal Complete Phase 13.1 exactly as specified in harness/build/phase-13-1-lab-polish.md.
+Outcome: labs break out to full width on desktop with two-column internal layouts (visual beside controls); a much more realistic procedural 3D African catfish (flattened blended head, swept barbels, rayed membrane fins, marbled shader, clearly different animated fingerling morph, soft lighting with contact shadow, under 20k triangles); a centred lightbox with a tidy toolbar; token-styled lab progress bars; separate citation chips; richer animated SVG pond scenes; and a proper Play/Pause button in the water simulator.
+Verify: `npm run check`, then `npm run verify` and `npm run test:e2e` outside the sandbox (ask approval) pass on both projects with the acceptance measurements recorded; screenshots saved to test-results/phase-13-1/.
+Constraints: AGENTS.md hard rules. No new deps, no remote assets or models; content/ and public/media/ are read-only; reduced motion respected; keep all existing behaviour and tests' intent.
+Boundaries: src/components/labs/**, src/components/media/**, src/components/dashboard/** (chips only), lesson layout CSS/components, tests/**.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run verify/e2e outside the sandbox.
+Blocked: stop and log in harness/build-log.md.
+Done: append a "Phase 13.1" evidence entry to harness/build-log.md, update PLANS.md, summarize, and stop. Do not start Phase 14.
+```
