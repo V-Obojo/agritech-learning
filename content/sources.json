@@ -1,0 +1,54 @@
+{
+  "status": "draft-unreviewed",
+  "note": "Sources gathered from the web on 2026-10-14 to draft placeholder content. Not yet reviewed by a fisheries expert.",
+  "sources": [
+    {
+      "id": "fao-hb-ch1",
+      "title": "Handbook on small-scale freshwater fish farming, Chapter 1: Introduction",
+      "publisher": "FAO (Training Series No. 24), compiled by V. Gopalakrishnan and A.G. Coche",
+      "year": 1994,
+      "url": "https://www.fao.org/4/T0581E/T0581E02.htm",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "fao-hb-ch2",
+      "title": "Handbook on small-scale freshwater fish farming, Chapter 2: Locating your fish farm",
+      "publisher": "FAO (Training Series No. 24), compiled by V. Gopalakrishnan and A.G. Coche",
+      "year": 1994,
+      "url": "https://www.fao.org/4/T0581E/T0581E03.htm",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "fao-hb-ch11",
+      "title": "Handbook on small-scale freshwater fish farming, Chapter 11: Taking care of your fish",
+      "publisher": "FAO (Training Series No. 24), compiled by V. Gopalakrishnan and A.G. Coche",
+      "year": 1994,
+      "url": "https://www.fao.org/4/T0581E/T0581E0c.htm",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "lrrd-2022-water-sources",
+      "title": "Optimization of induced breeding of Clarias gariepinus using different sources of water",
+      "publisher": "Livestock Research for Rural Development 34(11); Ataguba G.A., Okomoda V.T., Ukpong P. (Federal University of Agriculture, Makurdi)",
+      "year": 2022,
+      "url": "https://lrrd.org/lrrd34/11/34106gabi.html",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "worldfish-2023-baseline",
+      "title": "Baseline characterization of aquaculture systems and livelihoods in Nigeria",
+      "publisher": "WorldFish Technical Report 2023-22; Lozano Lazo D. et al.",
+      "year": 2023,
+      "url": "https://digitalarchive.worldfishcenter.org/handle/20.500.12348/5392",
+      "accessed": "2026-10-14"
+    },
+    {
+      "id": "belao-2011-air-breathing",
+      "title": "Cardiorespiratory responses to hypoxia in the African catfish, Clarias gariepinus, an air-breathing fish",
+      "publisher": "Journal of Comparative Physiology B 181(7):905-916; Belão T.C. et al.",
+      "year": 2011,
+      "url": "https://repositorio.unesp.br/handle/11449/21189",
+      "accessed": "2026-10-14"
+    }
+  ]
+}

@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fish Farming Basics (agritech-learning)
 
-## Getting Started
+Hackathon prototype: a mobile-friendly learning companion that helps curious beginners in Nigeria understand **water availability for catfish farming**, ask a source-grounded AI guide, try an inclusive activity, and get feedback, with progress saved on the device.
 
-First, run the development server:
+> **Draft content:** the lesson material in `content/` was drafted from public sources (FAO, WorldFish, Nigerian research) and has **not** been reviewed by a fisheries expert.
+
+Product spec: [agritech-learning-brainstorm.md](agritech-learning-brainstorm.md). The build is run phase by phase with Codex: see [PLANS.md](PLANS.md) and [PROMPTS.md](PROMPTS.md).
+
+## Setup
 
 ```bash
+npm install
+cp .env.example .env.local   # then fill in OPENAI_API_KEY / OPENAI_MODEL, set GUIDE_MODE=live
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without a key (or with `GUIDE_MODE=mock`), the guide and feedback use a deterministic offline mock.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | What it does |
+|---|---|
+| `npm run dev` | Dev server |
+| `npm run verify` | Lint + typecheck + unit tests + build (the quality gate) |
+| `npm run test` | Unit tests (mock mode) |
+| `npm run test:e2e` | Playwright e2e at a 375px mobile viewport (mock mode) |
 
-## Learn More
+## Backend smoke test (PowerShell, dev server running)
 
-To learn more about Next.js, take a look at the following resources:
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/guide -ContentType 'application/json' -Body '{"question":"Why does the dry season matter for a fish pond?"}' | ConvertTo-Json -Depth 6
+Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/guide -ContentType 'application/json' -Body '{"question":"What dose of medicine should I give sick catfish?"}' | ConvertTo-Json -Depth 6
+Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/feedback -ContentType 'application/json' -Body '{"pathId":"fictional","response":"Her well ran low last dry season and nobody has tested the water."}' | ConvertTo-Json -Depth 6
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check that `mode` is `live` when your key is configured, and that the second answer is `supported: false`.

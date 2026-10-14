@@ -1,0 +1,50 @@
+{
+  "id": "water-source-activity",
+  "lesson": "water-availability",
+  "status": "draft-unreviewed",
+  "title": "Look at a possible water source",
+  "intro": "Pick the option that fits your situation. All three count as completing the activity.",
+  "paths": [
+    {
+      "id": "observe",
+      "label": "I can look at a real water source",
+      "prompt": "Describe a water source you could actually look at (a well, borehole, stream, tap, rain tank, etc.). What is it, where is it, and what do you notice about it? What do you know, or not know, about whether it lasts through the dry season?",
+      "example": "Hand-dug well behind our house. Neighbours say it went very low for about two months last dry season. Water looks clear. Three households use it. Never been tested."
+    },
+    {
+      "id": "questions",
+      "label": "I have a place in mind but can't visit it",
+      "prompt": "Think of a place you might one day use. List the questions you would need answered about its water before going further. Use the lesson's checklist as a starting point and add your own.",
+      "example": "Does the stream near my uncle's land flow all year? Is it higher or lower than where a pond could go? Who else uses it? Has anyone tested it?"
+    },
+    {
+      "id": "fictional",
+      "label": "I don't have access to any site",
+      "prompt": "Read the scenario about Amina. What does she know about her water so far, what does she still need to find out, and what would you suggest as her next step?",
+      "scenario": "Amina (fictional) lives on the edge of a town in central Nigeria. Her family has a small plot with a hand-dug well that they share with two neighbouring households. During the last dry season the well got low and the families had to queue for water. There is also a small stream about a ten-minute walk away, lower down the slope than the plot. Amina has seen catfish ponds on social media and wants to know whether her family's water could support one. Nobody has ever tested either water source.",
+      "modelPoints": [
+        { "point": "The shared well already ran low in the dry season, so year-round supply is uncertain.", "criterion": "year-round", "chunks": ["wa-03"] },
+        { "point": "The stream is lower than the plot, so water is unlikely to flow in by gravity.", "criterion": "access-flow", "chunks": ["wa-04"] },
+        { "point": "Stream water could bring wild fish or disease.", "criterion": "other-users-risks", "chunks": ["wa-04", "wa-05"] },
+        { "point": "Neither source has been tested.", "criterion": "quality-signs", "chunks": ["wa-05"] },
+        { "point": "Other households depend on the well.", "criterion": "other-users-risks", "chunks": ["wa-09"] },
+        { "point": "A sensible next step is asking a local extension agent or experienced farmer.", "criterion": "open-questions", "chunks": ["wa-10"] }
+      ]
+    }
+  ],
+  "rubric": [
+    { "id": "source-identified", "description": "Names or discusses a type of water source.", "chunks": ["wa-04"], "keywords": ["well", "borehole", "stream", "river", "tap", "rain", "spring", "lake", "reservoir", "tank"] },
+    { "id": "year-round", "description": "Considers whether water lasts through the driest months, not just today.", "chunks": ["wa-03", "wa-08"], "keywords": ["dry season", "dry", "all year", "year-round", "harmattan", "season", "low", "dries"] },
+    { "id": "quality-signs", "description": "Mentions look, smell, muddiness, testing, or that sources differ.", "chunks": ["wa-05", "wa-06"], "keywords": ["test", "tested", "smell", "taste", "muddy", "clear", "colour", "color", "quality"] },
+    { "id": "access-flow", "description": "Considers distance and whether water flows by gravity or must be pumped or carried.", "chunks": ["wa-04"], "keywords": ["gravity", "pump", "carry", "distance", "walk", "higher", "lower", "slope", "close", "far"] },
+    { "id": "other-users-risks", "description": "Mentions sharing, other users, wild fish, or disease risk.", "chunks": ["wa-04", "wa-09"], "keywords": ["share", "shared", "neighbour", "neighbor", "households", "others", "wild fish", "disease", "community"] },
+    { "id": "open-questions", "description": "Records at least one honest unknown and a way to find out.", "chunks": ["wa-09", "wa-10"], "keywords": ["?", "don't know", "not sure", "find out", "ask", "extension", "unknown"] }
+  ],
+  "feedbackRules": [
+    "Be supportive and specific; reference lesson chunk ids.",
+    "Start with one thing done well (cite a rubric criterion).",
+    "Then one or two things to think about next (cite criterion and chunk).",
+    "End with a suggested next step taken from pathway.json nextSteps.",
+    "Never give technical prescriptions (doses, stocking numbers, water-quality thresholds) that are not in the lesson."
+  ]
+}

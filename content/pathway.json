@@ -1,0 +1,62 @@
+{
+  "status": "draft-unreviewed",
+  "intentions": [
+    { "id": "curious", "label": "I'm just curious about fish farming", "welcome": "Great. You can learn the basics here with no commitment. Deciding fish farming isn't for you is a perfectly good outcome too." },
+    { "id": "considering", "label": "I'm thinking about starting", "welcome": "Good. Water is the first thing to check, so that's where we'll begin." },
+    { "id": "student", "label": "I'm studying agriculture", "welcome": "Welcome. This lesson connects what you study with the practical questions a beginner faces on a real site." }
+  ],
+  "stages": [
+    { "id": "explore", "label": "Explore", "active": true },
+    { "id": "basics", "label": "Learn the basics", "active": true, "lessons": ["water-availability"] },
+    { "id": "decide", "label": "Decide if it suits me", "active": false },
+    { "id": "prepare", "label": "Prepare", "active": false },
+    { "id": "first-cycle", "label": "Learn through a first cycle", "active": false }
+  ],
+  "understandingCheck": [
+    {
+      "id": "uc-1",
+      "question": "Why isn't rain alone a reliable way to fill a fish pond?",
+      "options": ["Rain water is always polluted", "Dry periods can leave the pond too low", "Catfish cannot live in rain water"],
+      "answerIndex": 1,
+      "chunk": "wa-03"
+    },
+    {
+      "id": "uc-2",
+      "question": "African catfish can breathe air. What does that mean for water?",
+      "options": ["Water quality no longer matters", "They are hardy, but good water is still needed", "They never need fresh water"],
+      "answerIndex": 1,
+      "chunk": "wa-07"
+    },
+    {
+      "id": "uc-3",
+      "question": "Water from a source looks clear. What is a sensible next step before relying on it?",
+      "options": ["Nothing, clear water is always fine", "Have it tested if possible", "Add fertilizer"],
+      "answerIndex": 1,
+      "chunk": "wa-05"
+    }
+  ],
+  "stuckHints": {
+    "lesson": "Try reading just wa-03 (Enough water, all year round). It holds the single most important idea in this lesson.",
+    "activity-observe": "Start small: write what the source is, who uses it, and one thing you don't know about it in the dry season.",
+    "activity-questions": "Copy two questions from the lesson checklist (wa-09) and add one of your own about the specific place.",
+    "activity-fictional": "Re-read Amina's story and look for three facts: what happened in the dry season, where the stream is compared with the plot, and whether anything was tested.",
+    "guide": "Try asking about one idea at a time, for example: 'Why does the dry season matter?'"
+  },
+  "nextSteps": [
+    { "id": "talk-extension", "label": "Find out if there is a fisheries extension agent or fish culture station near you", "chunks": ["wa-10"] },
+    { "id": "talk-farmer", "label": "Talk to an experienced local catfish farmer about their water", "chunks": ["wa-10"] },
+    { "id": "dry-season-check", "label": "Ask people who use your water source how it behaves in the driest months", "chunks": ["wa-03", "wa-08"] },
+    { "id": "testing", "label": "Find out where water can be tested in your area", "chunks": ["wa-05"] },
+    { "id": "pause", "label": "Pause here. You've learned the first thing to check, and you can come back any time", "chunks": [] }
+  ],
+  "unsupportedFallback": {
+    "message": "The lessons here don't cover that yet, so I can't give you a reliable answer.",
+    "nextStep": "talk-extension"
+  },
+  "reminder": {
+    "optional": true,
+    "demoOnly": true,
+    "label": "Remind me to check my water source in a week",
+    "preview": "Hi! Last week you looked at a possible water source. Have you been able to ask anyone how it behaves in the dry season?"
+  }
+}
