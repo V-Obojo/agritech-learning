@@ -3,7 +3,7 @@ import { useState } from "react";
 import { helpResponseSchema } from "@/lib/feedback/types";
 import { postJson } from "./api-client";
 import { recordEvent } from "@/lib/metrics";
-export function StuckHelp({ step, topic }: { step: string; topic: { topicId: string; subjectId: string; basePath: string } }) {
+export function StuckHelp({ step, topic, label = "Stuck?" }: { step: string; topic: { topicId: string; subjectId: string; basePath: string }; label?: string }) {
   const [result, setResult] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -14,6 +14,6 @@ export function StuckHelp({ step, topic }: { step: string; topic: { topicId: str
     catch { setError("Help could not load. Please try again."); }
     finally { setBusy(false); }
   }
-  return <div className="stuck-help"><button type="button" className="secondary" disabled={busy} onClick={help}>{busy ? "Loading help…" : "Stuck?"}</button>
+  return <div className="stuck-help"><button type="button" className="secondary" disabled={busy} onClick={help}>{busy ? `Loading: ${label}` : label}</button>
     <div aria-live="polite">{result && <p className="hint">{result}</p>}{error && <p role="alert">{error}</p>}</div></div>;
 }

@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useSyncExternalStore } from "react";
 import { getTopicProgress, loadProgress, serverProgress, subscribeProgress, topicKey, visitTopic } from "@/lib/progress";
+import { useAccount } from "./account-provider";
 import { recordEvent } from "@/lib/metrics";
 const emptySubscribe = () => () => {};
 export function useProgress() {
-  const progress = useSyncExternalStore(subscribeProgress, loadProgress, () => serverProgress);
+  const {initialProgress,user}=useAccount();
+  const progress = useSyncExternalStore(subscribeProgress, loadProgress, () => initialProgress ?? serverProgress);
   const ready = useSyncExternalStore(emptySubscribe, () => true, () => false);
-  return { progress, ready };
+  return { progress, ready: Boolean(user) || ready };
 }
 export function useTopicProgress(topic: { subjectId: string; topicId: string }, path: string, viewed = false) {
   const { progress, ready } = useProgress();

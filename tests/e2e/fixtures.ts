@@ -1,16 +1,20 @@
 import { test as base, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import {randomUUID} from "node:crypto";
 import type { Activity, Catalog, SubjectPath, TopicConfig } from "../../src/lib/content/schemas";
 export const test=base.extend<{localOnly:void}>({
   channel:[process.platform==="win32" ? "msedge" : undefined,{scope:"worker"}],
   localOnly:[async({page},use)=>{
+    // Independent simulated clients retain the real per-address signup limit.
+    await page.setExtraHTTPHeaders({"x-forwarded-for":`e2e-${randomUUID()}`});
     const errors:string[]=[];
     page.on("pageerror",error=>errors.push(error.message));
     page.on("console",message=>{
       // The deliberately visited missing route has its not-found UI asserted.
       const expected404=message.text().includes("404") && new URL(message.location().url || page.url()).pathname==="/unknown-page";
-      if(message.type()==="error" && !expected404) errors.push(message.text());
+      const expectedCredentialsFailure=message.text().includes("401") && new URL(message.location().url || page.url()).pathname==="/api/auth/callback/credentials";
+      if(message.type()==="error" && !expected404 && !expectedCredentialsFailure) errors.push(message.text());
     });
     await page.route("**/*",route=>{
       const hostname=new URL(route.request().url()).hostname;

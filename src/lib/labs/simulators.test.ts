@@ -1,0 +1,40 @@
+import {describe,it,expect,vi} from "vitest";
+vi.mock("server-only",()=>({}));
+import {listLabs} from "@/lib/content";
+import {waterSchema,pondSchema,observationSchema} from "./definitions";
+import {shortfallByMonth,worstMonth,sourcesCoveringAllYear,waterCompletion,waterState,questionOptions} from "./water-simulator";
+import {area,volume,litres,snap,clamp,checkChallenge,pondState,earnChallenges,pondCompletion} from "./pond-builder";
+import {evaluateTap,sceneScore,overallScore,observationState,observationCompletion} from "./observation";
+import {simulationStatus} from "./status";
+const labs=listLabs(),water=waterSchema.parse(labs.find(l=>l.type==="water-simulator")),pond=pondSchema.parse(labs.find(l=>l.type==="pond-builder")),observation=observationSchema.parse(labs.find(l=>l.type==="observation"));
+describe("water simulator",()=>{
+  it("calculates each authored month without rolling water between months",()=>{const months=shortfallByMonth(water,"shared-well");expect(months[0]).toMatchObject({supply:55,need:100,shortfall:45,season:"dry"});expect(months[6]).toMatchObject({need:60,shortfall:0});expect(months).toHaveLength(water.months.length);});
+  it("worst shared-well month is dry and coverage is borehole only",()=>{expect(worstMonth(water,"shared-well")).toMatchObject({index:2,season:"dry",shortfall:65});expect(sourcesCoveringAllYear(water)).toEqual(["borehole"]);});
+  it("equality meets need and shortfalls never go negative",()=>{expect(shortfallByMonth(water,"borehole")[1].shortfall).toBe(0);expect(shortfallByMonth(water,"borehole").every(m=>m.shortfall>=0)).toBe(true);});
+  it("rejects an unknown source",()=>expect(()=>worstMonth(water,"missing")).toThrow("Unknown water source"));
+  it("question options come from source and season data",()=>{expect(questionOptions(water,water.questions[0].answer).map(o=>o.id)).toEqual(water.sources.map(s=>s.id));expect(questionOptions(water,water.questions[1].answer).map(o=>o.id)).toEqual(["dry","wet"]);});
+  it("requires distinct valid sources and correct answers",()=>{const state=waterState(water,null);state.explored=["shared-well","shared-well","borehole","missing"];state.answers={"q-best":"shared-well","q-worst-month":"dry"};expect(waterCompletion(water,state)).toMatchObject({sources:2,questions:1,completed:false});state.explored.push("stream");state.answers["q-best"]="borehole";expect(waterCompletion(water,state)).toMatchObject({completed:true,score:100});});
+  it("normalizes old/forged state and clamps month",()=>{expect(waterState(water,null).month).toBe(0);expect(waterState(water,{sourceId:"missing",month:99,explored:["missing"],answers:{fake:"dry","q-best":"fake"}})).toMatchObject({sourceId:water.sources[0].id,month:11,explored:[],answers:{}});});
+  it("rejects impossible scenario data",()=>{expect(waterSchema.safeParse({...water,sources:[{...water.sources[0],levels:[1]}]}).success).toBe(false);expect(waterSchema.safeParse({...water,questions:[{...water.questions[0],answer:"missing"}]}).success).toBe(false);});
+});
+describe("pond builder",()=>{
+  it.each([[20,20,1,400,400,400000],[2,2,.3,4,1.2,1200],[50,50,2,2500,5000,5000000]])("calculates %s × %s × %s",(l,w,d,a,v,lit)=>{expect(area(l,w)).toBe(a);expect(volume(l,w,d)).toBeCloseTo(v);expect(litres(volume(l,w,d))).toBeCloseTo(lit);});
+  it("snaps fractional steps without floating-point residue",()=>{expect(snap(17.49,.5)).toBe(17.5);expect(snap(.73,.05)).toBe(.75);expect(snap(.3,.05)).toBe(.3);});
+  it.each([0,-.5,NaN,Infinity])("rejects invalid step %s",step=>expect(()=>snap(1,step)).toThrow("Invalid snapping input"));
+  it("clamps both edges including nonfinite inputs",()=>{expect(clamp(-10,2,50)).toBe(2);expect(clamp(80,2,50)).toBe(50);expect(clamp(NaN,2,50)).toBe(2);expect(clamp(Infinity,2,50)).toBe(50);expect(clamp(-Infinity,2,50)).toBe(2);});
+  it("20 × 20 satisfies the authored example",()=>{expect(checkChallenge(pond.challenges[0].check,{length:20,width:20})).toBe(true);expect(checkChallenge(pond.challenges[0].check,{length:20,width:19.5})).toBe(false);});
+  it("17.5 m square meets strict min area and inclusive max area",()=>{const check=pond.challenges[1].check;expect(checkChallenge(check,{length:17.5,width:17.5})).toBe(true);expect(checkChallenge(check,{length:17,width:17})).toBe(false);expect(checkChallenge(check,{length:18,width:18})).toBe(false);expect(checkChallenge(check,{length:20,width:15})).toBe(false);expect(checkChallenge({minArea:300},{length:20,width:15})).toBe(false);});
+  it("backyard dimensions are checked independently",()=>{expect(checkChallenge(pond.challenges[2].check,{length:8,width:6})).toBe(true);expect(checkChallenge(pond.challenges[2].check,{length:6,width:8})).toBe(false);});
+  it("invalid physical dimensions cannot satisfy a challenge",()=>{expect(checkChallenge({square:true},{length:0,width:0})).toBe(false);expect(checkChallenge({},{length:Infinity,width:10})).toBe(false);});
+  it("normalizes sizes, depth, setup and saved ids",()=>{expect(pondState(pond,{length:-2,width:100,depth:5,setupId:"fake",challenges:["fake"]})).toMatchObject({length:2,width:50,depth:2,setupId:pond.setupTypes[0].id,challenges:[]});expect(pondState(pond,null)).toMatchObject(pond.defaults);});
+  it("retains two distinct earned challenges after dimensions change",()=>{let state=earnChallenges(pond,{...pondState(pond,null),length:20,width:20});expect(pondCompletion(pond,state).completed).toBe(false);state=earnChallenges(pond,{...state,length:17.5,width:17.5});expect(pondCompletion(pond,state)).toMatchObject({completed:true,score:100});state=earnChallenges(pond,{...state,length:2,width:2});expect(state.challenges).toHaveLength(2);expect(pondCompletion(pond,state).completed).toBe(true);});
+  it("rejects reversed limits",()=>expect(pondSchema.safeParse({...pond,limits:{...pond.limits,maxSide:1}}).success).toBe(false));
+});
+describe("observation scenes",()=>{
+  it("tap evaluation distinguishes signs, neutral and unknown elements",()=>{const scene=observation.scenes[0];expect(evaluateTap(scene,"gasping",[]).kind).toBe("sign");expect(evaluateTap(scene,"bird",[]).kind).toBe("neutral");expect(evaluateTap(scene,"missing",[])).toMatchObject({kind:"unknown",taps:[]});});
+  it("duplicate taps count once and wrong taps reduce score without changing found signs",()=>{const scene=observation.scenes[0];expect(sceneScore(scene,["gasping","gasping","uneaten-feed","bird","bird"])).toEqual({found:2,total:2,wrong:1,score:50,completed:true});expect(sceneScore(scene,["bird"])).toMatchObject({score:0,completed:false});});
+  it("all signs in all scenes give 100, one wrong tap gives 80",()=>{const taps=Object.fromEntries(observation.scenes.map(s=>[s.id,s.elements.filter(e=>e.isSign).map(e=>e.id)]));expect(overallScore(observation,taps)).toBe(100);taps[observation.scenes[0].id].push("bird");expect(overallScore(observation,taps)).toBe(80);expect(observationCompletion(observation,{sceneId:observation.scenes[0].id,taps,summary:true})).toMatchObject({completed:true,score:80,done:3});});
+  it("missing scenes and unknown saved ids never award completion",()=>{const state=observationState(observation,{sceneId:"missing",taps:{fake:["fake"],[observation.scenes[0].id]:["gasping","missing"]},summary:false});expect(state.sceneId).toBe(observation.scenes[0].id);expect(state.taps[observation.scenes[0].id]).toEqual(["gasping"]);expect(observationCompletion(observation,state)).toMatchObject({completed:false,done:0});});
+  it("requires citations for signs and reachable scene counts",()=>{const changed=structuredClone(observation);delete changed.scenes[0].elements[0].chunk;expect(observationSchema.safeParse(changed).success).toBe(false);expect(observationSchema.safeParse({...observation,completion:{scenesDone:4}}).success).toBe(false);});
+  it("every implemented simulation normalizes through the shared status adapter",()=>{for(const l of labs.filter(l=>l.type!=="model-viewer")){const status=simulationStatus(l,null);expect(status.completed).toBe(false);expect(status.score).toBe(0);expect(status.total).toBeGreaterThan(0);}expect(()=>simulationStatus(labs[0],null)).toThrow("Unsupported simulation type");});
+});

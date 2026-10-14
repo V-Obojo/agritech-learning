@@ -1,5 +1,17 @@
 import { lessonSchema, type Lesson } from "./schemas";
 
+export function parseBlocks(body:string) {
+  const blocks: NonNullable<Lesson["chunks"][number]["blocks"]> = [];
+  let buffer:string[]=[];
+  const flush=()=>{const text=buffer.join("\n").trim();if(text) blocks.push({type:"text",text});buffer=[];};
+  for(const line of body.replace(/\r\n?/g,"\n").split("\n")) {
+    const match=/^\s*::(figure|lab)\s+([\w-]+)\s*$/.exec(line);
+    if(match) {flush();blocks.push(match[1]==="figure" ? {type:"figure",mediaId:match[2]} : {type:"lab",labId:match[2]});}
+    else {if(/^\s*::(?:figure|lab)\b/.test(line)) throw new Error(`Invalid lesson directive: ${line}`);buffer.push(line);}
+  }
+  flush();return blocks;
+}
+
 /** Parse the simple frontmatter and chunk format in content/README.md. */
 export function parseLesson(markdown: string): Lesson {
   const lines = markdown.replace(/\r\n?/g, "\n").split("\n");
@@ -31,10 +43,13 @@ export function parseLesson(markdown: string): Lesson {
     index++;
     const bodyStart = index;
     while (index < lines.length && !/^##\s/.test(lines[index])) index++;
+    const body=lines.slice(bodyStart,index).join("\n").trim();
+    const blocks=parseBlocks(body);
     chunks.push({
       id, title: heading[2].trim(),
       sourceIds: sources[1].split(",").map((source) => source.trim()),
-      body: lines.slice(bodyStart, index).join("\n").trim(),
+      body,
+      ...(blocks.some(block=>block.type!=="text") ? {blocks} : {}),
     });
   }
   const result = lessonSchema.safeParse({ ...frontmatter, chunks });

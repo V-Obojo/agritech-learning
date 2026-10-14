@@ -12,6 +12,11 @@ export const sourcesSchema = z.object({
 });
 export const lessonChunkSchema = z.object({
   id: text, title: text, sourceIds: texts.min(1), body: text,
+  blocks: z.array(z.discriminatedUnion("type",[
+    z.object({type:z.literal("text"),text}),
+    z.object({type:z.literal("figure"),mediaId:text}),
+    z.object({type:z.literal("lab"),labId:text}),
+  ])).optional(),
 });
 export const lessonSchema = z.object({
   id: text, title: text, species: text, region: text, status: text,
@@ -60,7 +65,7 @@ export type Activity = z.infer<typeof activitySchema>;
 const availability = z.enum(["live", "coming-soon"]);
 export const catalogSchema = z.object({
   status: text,
-  product: z.object({ name: text, parent: text, tagline: text, pitch: text, region: text }),
+  product: z.object({ name: text, parent: text, tagline: text, pitch: text, region: text, heroEyebrow: text }),
   intentions: z.array(z.object({ id: text, label: text })).min(1),
   areas: z.array(z.object({
     id: text, slug: text, label: text, blurb: text, status: availability,
@@ -69,6 +74,7 @@ export const catalogSchema = z.object({
 });
 export const subjectPathSchema = z.object({
   subject: text, status: text, title: text, intro: text, whatYouWillLearn: texts,
+  hubCard: z.object({ title: text, note: text, intentionPrompt: text }),
   topics: z.array(z.object({ id: text, slug: text, order: z.number().int().positive(), title: text, summary: text, status: availability })).min(1),
 });
 export type Catalog = z.infer<typeof catalogSchema>;

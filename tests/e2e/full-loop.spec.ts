@@ -16,7 +16,8 @@ test("full loop: curious learner, cited guide, observe activity, next step and t
   await expect(session.getByText("Check score: 3/3",{exact:true})).toBeVisible();
   await expect(session.getByText("Would return: yes",{exact:true})).toBeVisible();
   const log=await events(page);
-  expect(log.map(event=>event.name)).toEqual(["intention_chosen","area_opened","subject_opened","topic_opened","lesson_viewed","check_answered","check_answered","check_answered","guide_asked","activity_submitted","activity_completed","would_return"]);
+  expect(log.filter(event=>!event.name.startsWith("lab_")).map(event=>event.name)).toEqual(["intention_chosen","area_opened","subject_opened","topic_opened","lesson_viewed","check_answered","check_answered","check_answered","guide_asked","activity_submitted","activity_completed","would_return"]);
+  expect(log.some(event=>event.name==="lab_started" && event.details.topicId===water.meta.id)).toBe(true);
   expect(log.filter(event=>event.name==="check_answered").every(event=>event.details.correct)).toBe(true);
   await expectTopicMetrics(page);
 });

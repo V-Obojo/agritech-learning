@@ -101,3 +101,25 @@ Product scope: [agritech-learning-brainstorm.md](agritech-learning-brainstorm.md
 Only two fish topics are live; the other three topics and all other subjects are coming soon. Content is draft, English-only and not expert-reviewed. Mock test success does not establish live model accuracy; the human still needs to run the live smoke test. There are no live reminders, accounts, shared progress, offline caching, full-cycle curriculum or live diagnosis. Device storage can be blocked or cleared. Willingness to return is a local self-report: **long-term retention is unproven**.
 
 Additional topics, translations and other features need content review and learner validation. Deployment and GitHub push remain human actions requiring approval.
+
+
+## Set up accounts locally
+
+Accounts are optional; guest lessons remain available. Account pages require a configured database and an auth secret. The app fails with a setup message when NEXTAUTH_SECRET is missing and never creates a deployment secret for you. Do not commit or share secrets.
+
+Run these commands yourself in PowerShell from the project folder. The first command captures the generated value in the environment without printing it. Keep the same secret across restarts so existing sessions remain valid.
+
+```powershell
+$env:NEXTAUTH_SECRET = node -e "process.stdout.write(require('node:crypto').randomBytes(32).toString('base64url'))"
+$env:NEXTAUTH_URL = "http://localhost:3000"
+$env:DATABASE_URL = "file:./data/ovayi.db"
+New-Item -ItemType Directory -Force data | Out-Null
+npm run db:migrate
+npm run dev
+```
+
+For later sessions, you maintain `.env.local` yourself, using `.env.example` as the variable reference; keep its values private. Next.js loads that file for the app. Drizzle commands use the current process environment, so set DATABASE_URL in the terminal before migrating. The agent does not read or edit `.env.local`. DATABASE_AUTH_TOKEN is only needed for a remote Turso/libsql database; local SQLite needs no token. The runtime creates parent directories for local file URLs.
+
+Sign up or sign in to merge guest work into the account. Guest progress is cleared only after the merge and event transfer succeed. Account work stays out of guest localStorage, refreshes from the server, and saves after about a second; failed saves keep the current work available and offer a retry. Signing out flushes pending changes, then returns to guest learning. The account page edits profile, state, intention and theme, changes passwords using the current password, and deletes the account and related rows after typing DELETE. Forgot password provides the authored admin contact; no reset email is sent. Dashboard customization remains Phase 11 work.
+
+`npm run test` uses migrated temporary SQLite files for account tests. `npm run test:e2e` starts a fresh migrated temporary database and an explicitly test-only auth configuration, overriding deployment database credentials. No live guide calls, real deployment secrets, or production database files are used by these tests. On Windows, the native SQLite library may retain a temporary file handle until its test worker exits; temporary fixtures stay in the OS temp directory rather than blocking cleanup.

@@ -35,7 +35,7 @@ test("all page types fit 375, 768, 1280 and 1440; save desktop and phone views",
   }
 });
 
-test("home identity, single up next, placeholders, navigation and live lessons",async({page})=>{
+test("home identity, single up next, labs, credits, navigation and live lessons",async({page})=>{
   await page.goto("/");
   await expect(page.getByRole("heading",{level:1,name:catalog.product.name,exact:true})).toHaveCount(1);
   expect((await page.getByRole("banner").getByRole("link",{name:catalog.product.name,exact:true}).boundingBox())!.height).toBeGreaterThanOrEqual(44);
@@ -62,9 +62,10 @@ test("home identity, single up next, placeholders, navigation and live lessons",
       await expect(page.getByRole("button",{name:"Ask the guide",exact:true})).toBeFocused();
     }
   }
-  for(const [url,title] of [["/labs","Labs"],["/dashboard","Dashboard"],["/signin","Sign in"],["/signup","Sign up"],["/credits","Credits"]]) {
+  for(const [url,title] of [["/labs","Labs"],["/credits","Credits"]]) {
     await page.goto(url);await expect(page.getByRole("heading",{level:1,name:title,exact:true})).toBeVisible();
-    await expect(page.getByText("Coming in this build",{exact:true})).toBeVisible();
+    if(url==="/labs") await expect(page.locator("[data-lab-card]")).toHaveCount(4);
+    else await expect(page.locator("main .lesson-figure")).toHaveCount(10);
   }
   const menu=page.getByRole("button",{name:"Open menu",exact:true});
   if(await menu.isVisible()) {

@@ -12,10 +12,10 @@ export default defineConfig({
     { name: "mobile-chromium", use: { ...devices["Pixel 7"], viewport: { width: 375, height: 812 } } },
   ],
   webServer: {
-    command: "npm run build && npx next start -p 3100",
+    command: "node tests/e2e-server.mjs",
     url: "http://localhost:3100",
     reuseExistingServer: false,
     timeout: 240_000,
-    env: { GUIDE_MODE: "mock", DATABASE_URL: `file:data/test-phase-09-${process.pid}.db` },
+    env: { GUIDE_MODE: "mock" },
   },
 });

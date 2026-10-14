@@ -1,0 +1,26 @@
+import {describe,it,expect,vi} from "vitest";
+vi.mock("server-only",()=>({}));
+import {parseBlocks} from "./parse-lesson";
+import {getMedia,getLab,getTopic,listMedia,listLabs,getBadges,listLiveTopics} from "./index";
+import {checkMediaIntegrity,type MediaIntegrityInput} from "./media-integrity";
+import {labFallback,labLink} from "./lab-links";
+import {modelLabSchema,mediaSchema,labsRegistrySchema} from "./media-labs";
+function fixture():MediaIntegrityInput {return {...structuredClone({media:listMedia(),labs:listLabs(),badges:getBadges(),topics:listLiveTopics().map(t=>({subjectId:t.subjectId,topic:getTopic(t.subjectId,t.topicId)}))}),fileExists:()=>true};}
+describe("Phase 12 directives and registries",()=>{
+  it("preserves text / figure / text / lab / figure ordering",()=>{expect(parseBlocks("First\r\n\r\n::figure photo\r\n\r\nMiddle\r\n::lab model\r\n::figure last")).toEqual([{type:"text",text:"First"},{type:"figure",mediaId:"photo"},{type:"text",text:"Middle"},{type:"lab",labId:"model"},{type:"figure",mediaId:"last"}]);});
+  it("supports adjacent directives and only parses standalone lines",()=>{expect(parseBlocks("::lab one\n::figure two\nText ::lab three")).toEqual([{type:"lab",labId:"one"},{type:"figure",mediaId:"two"},{type:"text",text:"Text ::lab three"}]);});
+  it.each(["::figure", "::lab one extra", "::figure ../outside"])("rejects malformed directive %s",body=>expect(()=>parseBlocks(body)).toThrow("Invalid lesson directive"));
+  it("loads all registries and fails clearly for unknown ids",()=>{expect(listMedia()).toHaveLength(10);expect(listLabs()).toHaveLength(4);expect(getMedia("catfish-drawing").width).toBe(1280);expect(getLab("catfish-3d").type).toBe("model-viewer");expect(()=>getMedia("missing")).toThrow("Unknown media");expect(()=>getLab("missing")).toThrow("Unknown lab");});
+  it("validates dimensions, local paths, URLs and reachable completion",()=>{
+    const media=getMedia("catfish-drawing");expect(mediaSchema.safeParse({...media,width:0}).success).toBe(false);expect(mediaSchema.safeParse({...media,file:"https://example.test/photo.jpg"}).success).toBe(false);expect(mediaSchema.safeParse({...media,file:"/media/../outside"}).success).toBe(false);expect(mediaSchema.safeParse({...media,sourceUrl:"no"}).success).toBe(false);
+    const lab=modelLabSchema.parse(getLab("catfish-3d"));expect(modelLabSchema.safeParse({...lab,completion:{hotspotsVisited:100,modesViewed:2}}).success).toBe(false);expect(labsRegistrySchema.safeParse({labs:[{...lab,hotspots:[{...lab.hotspots[0],chunk:""}]}]}).success).toBe(false);
+  });
+  it("all current media and lab integrity checks pass",()=>expect(checkMediaIntegrity()).toEqual([]));
+  it("finds directive ids absent from registries",()=>{const f=fixture();f.fileExists=()=>true;f.topics[0].topic.lesson.chunks[0].body+="\n::figure absent\n::lab absent";expect(checkMediaIntegrity(f)).toEqual(expect.arrayContaining(["Unknown figure: absent","Unknown lab: absent"]));});
+  it("finds missing physical files and unknown badges",()=>{const f=fixture();f.fileExists=()=>false;f.labs[0].badge="absent";const problems=checkMediaIntegrity(f);expect(problems).toContain(`Missing media file: ${f.media[0].file}`);expect(problems).toContain(`Lab ${f.labs[0].id} has unknown badge: absent`);});
+  it("rejects cross-topic chunk references, including nested future lab data",()=>{const f=fixture();f.fileExists=()=>true;const model=modelLabSchema.parse(f.labs[0]);model.hotspots[0].chunk="wa-01";f.labs[0]=model;const sim=f.labs.find(l=>l.type==="water-simulator")!;if(sim.type!=="model-viewer") sim.sources![0].chunks=["mc-01"];expect(checkMediaIntegrity(f)).toContain("Lab catfish-3d has unknown chunk: wa-01");expect(checkMediaIntegrity(f)).toContain("Lab water-source-sim has unknown chunk: mc-01");});
+  it("rejects non-live topics and labs embedded in the wrong topic",()=>{const f=fixture();f.fileExists=()=>true;f.topics.find(t=>t.topic.meta.id===f.labs[0].topicId)!.topic.meta.status="coming-soon";f.topics[0].topic.lesson.chunks[0].body+="\n::lab catfish-3d";expect(checkMediaIntegrity(f)).toContain("Lab catfish-3d has no live topic");expect(checkMediaIntegrity(f)).toContain("Lab catfish-3d embedded in another topic");});
+  it("checks chunk tokens inside authored notes too",()=>{const f=fixture();const model=modelLabSchema.parse(f.labs[0]);model.modes[0].note+=" (wa-01)";f.labs[0]=model;expect(checkMediaIntegrity(f)).toContain("Lab catfish-3d has unknown chunk: wa-01");});
+  it("detects unknown nested media and duplicate registry ids",()=>{const f=fixture();f.fileExists=()=>true;f.media.push(f.media[0]);const sim=f.labs.find(l=>l.type==="water-simulator")!;if(sim.type!=="model-viewer") sim.sources![0].media="missing";expect(checkMediaIntegrity(f)).toContain("Duplicate media id");expect(checkMediaIntegrity(f)).toContain("Lab water-source-sim has unknown media: missing");});
+  it("gallery anchors point to the directive chunk and fallback uses the body illustration",()=>{for(const lab of listLabs()) expect(labLink(lab).url).toMatch(/#\w+-\d+$/);expect(labLink(getLab("catfish-3d")).url).toBe("/animal-farming/fish-farming/meet-the-catfish#mc-02");expect(labFallback(getLab("catfish-3d"))?.id).toBe("catfish-drawing");});
+});

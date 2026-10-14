@@ -7,7 +7,7 @@ import { useProgress } from "./use-progress";
 import { IntentionPicker } from "./intention-picker";
 import { motion, useReducedMotion } from "motion/react";
 export function SubjectHub({path,intentions,links}: {path:SubjectPath;intentions:Catalog["intentions"];links:{id:string;href:string}[]}) {
-  const {progress,ready}=useProgress(); const [changing,setChanging]=useState(false);
+  const {progress}=useProgress(); const [changing,setChanging]=useState(false);
   const ordered=[...path.topics].sort((a,b)=>a.order-b.order);
   const next=ordered.find(topic=>topic.status==="live" && topicStatus(progress,topicKey(path.subject,topic.id))!=="done");
   const selected=next ?? ordered.find(topic=>topic.status==="live");
@@ -16,10 +16,10 @@ export function SubjectHub({path,intentions,links}: {path:SubjectPath;intentions
   const live=ordered.filter(topic=>topic.status==="live");
   const done=live.filter(topic=>topicStatus(progress,topicKey(path.subject,topic.id))==="done").length;
   const reduce=useReducedMotion();
-  return <div className="hub-layout"><aside className="card hub-summary"><div className="progress-ring" role="img" aria-label={`${done} of ${live.length} live topics done`}><svg viewBox="0 0 100 100" aria-hidden="true"><circle className="ring-track" cx="50" cy="50" r="42" /><motion.circle className="ring-value" cx="50" cy="50" r="42" pathLength="1" strokeDasharray="1" initial={false} animate={{strokeDashoffset:1-done/live.length}} transition={{duration:reduce ? 0 : .6}} /></svg><strong>{done}<small>of {live.length} done</small></strong></div><h2>Make room to grow</h2><section className="intention-line"><p>You’re here because: {intention?.label ?? "Choose what brings you here"} <button className="text-button" type="button" onClick={()=>setChanging(!changing)} aria-expanded={changing}>Change</button></p>
-    {(changing || (ready && !intention)) && <IntentionPicker intentions={intentions} name="hub-intention" />}</section>
+  return <div className="hub-layout"><aside className="card hub-summary"><div className="progress-ring" role="img" aria-label={`${done} of ${live.length} live topics done`}><svg viewBox="0 0 100 100" aria-hidden="true"><circle className="ring-track" cx="50" cy="50" r="42" /><motion.circle className="ring-value" cx="50" cy="50" r="42" pathLength="1" strokeDasharray="1" initial={false} animate={{strokeDashoffset:1-done/live.length}} transition={{duration:reduce ? 0 : .6}} /></svg><strong>{done}<small>of {live.length} done</small></strong></div><h2>{path.hubCard.title}</h2><section className="intention-line">{intention && <p>You’re here because: {intention.label} <button className="text-button" type="button" onClick={()=>setChanging(!changing)} aria-expanded={changing}>Change</button></p>}
+    {(changing || !intention) && <IntentionPicker intentions={intentions} name="hub-intention" legend={path.hubCard.intentionPrompt} />}</section>
     {selected && <div className="actions"><Link className="button" href={links.find(link=>link.id===selected.id)!.href}>{!started ? "Start" : `${next ? "Continue" : "Review"}: ${selected.title}`}</Link></div>}
-    <p className="eyebrow">One topic at a time. At your own pace.</p></aside><div><section className="card learning-outcomes"><h2>What you’ll learn</h2><ul>{path.whatYouWillLearn.map(item=><li key={item}>{item}</li>)}</ul></section><h2>Your learning path</h2><ol className="topic-path">{ordered.map(topic=>{
+    <p className="eyebrow">{path.hubCard.note}</p></aside><div><section className="card learning-outcomes"><h2>What you’ll learn</h2><ul>{path.whatYouWillLearn.map(item=><li key={item}>{item}</li>)}</ul></section><h2>Your learning path</h2><ol className="topic-path">{ordered.map(topic=>{
       const status=topicStatus(progress,topicKey(path.subject,topic.id));
       const badge=topic.status==="coming-soon" ? "Coming soon" : status==="done" ? "Done" : topic.id===next?.id ? "Up next" : status==="in-progress" ? "In progress" : "Not started";
       const content=<><span className="topic-number">{topic.order}</span><div><span className={`badge ${badge==="Done" ? "badge-done" : badge==="Coming soon" ? "badge-soon" : "badge-next"}`}>{badge}</span><h3>{topic.title}</h3><p>{topic.summary}</p></div></>;

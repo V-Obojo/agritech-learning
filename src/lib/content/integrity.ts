@@ -1,5 +1,6 @@
 import { getCatalog, getSources, getSubjectPath, getTopic } from "./index";
 import type { Catalog, Sources, Topic } from "./schemas";
+import {checkMediaIntegrity} from "./media-integrity";
 export interface ContentIntegrityInput { catalog: Catalog; sources: Sources; topics: Topic[] }
 export function checkContentIntegrity(input?: ContentIntegrityInput): string[] {
   const problems: string[] = [];
@@ -42,5 +43,6 @@ export function checkContentIntegrity(input?: ContentIntegrityInput): string[] {
     for (const path of activity.paths) if (!config.stuckHints[`activity-${path.id}`]) problems.push(`Missing stuck hint: activity-${path.id}`);
     for (const path of activity.paths) for (const point of path.modelPoints ?? []) if (!activity.rubric.some(criterion => criterion.id === point.criterion)) problems.push(`Unknown model-point criterion: ${point.criterion}`);
   }
+  if(!input) {try{problems.push(...checkMediaIntegrity());}catch(error){problems.push(String(error));}}
   return problems;
 }

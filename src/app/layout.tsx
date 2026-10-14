@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { AccountShell } from "@/components/account-shell";
 import type { Metadata } from "next";
 import "./globals.css";
 import { getCatalog } from "@/lib/content";
@@ -17,9 +19,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head><script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('ovayi-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch{}` }} /></head>
       <body className="min-h-full flex flex-col">
         <a className="skip-link" href="#main">Skip to content</a>
+        <Suspense fallback={<main id="main" aria-busy="true"><p>Loading your learning space…</p></main>}><AccountShell>
         <SiteNav name={product.name} parent={product.parent} />
         {children}
         <SiteFooter name={product.name} parent={product.parent} supportContact={catalog.product.supportContact} />
+        </AccountShell></Suspense>
       </body>
     </html>
   );

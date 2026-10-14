@@ -52,3 +52,7 @@ next-env.d.ts
 
 # local database
 /data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3

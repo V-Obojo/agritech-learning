@@ -26,7 +26,7 @@ export function LessonGuide({ topic }: {topic:LearningContext}) {
     const sync=()=>{sheet.current?.close();setPhone(media.matches);};
     sync();media.addEventListener("change",sync);return ()=>media.removeEventListener("change",sync);
   },[]);
-  const content=<><GuidePanel topic={topic} onCitation={()=>sheet.current?.close()} /><StuckHelp step="lesson" topic={topic} /></>;
+  const content=<><GuidePanel topic={topic} onCitation={()=>sheet.current?.close()} /><StuckHelp step="lesson" topic={topic} label="Help with the lesson" /></>;
   return <aside className="lesson-guide">
     {phone===false && <div className="guide-desktop">{content}</div>}
     <button ref={trigger} className="guide-trigger" aria-haspopup="dialog" onClick={()=>sheet.current?.showModal()}>Ask the guide <span aria-hidden="true">↗</span></button>

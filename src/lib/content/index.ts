@@ -2,6 +2,8 @@ import "server-only";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
+import { mediaRegistrySchema,labsRegistrySchema } from "./media-labs";
+import { badgesSchema } from "../insights/calculators";
 import { parseLesson } from "./parse-lesson";
 import { activitySchema, catalogSchema, subjectPathSchema, topicConfigSchema, sourcesSchema, type Catalog, type Sources, type SubjectPath, type Topic } from "./schemas";
 
@@ -23,6 +25,11 @@ const paths = new Map<string, SubjectPath>();
 const topics = new Map<string, Topic>();
 export class InvalidTopicError extends Error {}
 export function getSources() { return sources ??= readJson("sources.json", sourcesSchema); }
+export function listMedia() {return readJson("media.json",mediaRegistrySchema).media;}
+export function getMedia(id:string) {const item=listMedia().find(item=>item.id===id);if(!item) throw new Error(`Unknown media: ${id}`);return item;}
+export function listLabs() {return readJson("labs.json",labsRegistrySchema).labs;}
+export function getLab(id:string) {const item=listLabs().find(item=>item.id===id);if(!item) throw new Error(`Unknown lab: ${id}`);return item;}
+export function getBadges() {return readJson("badges.json",badgesSchema).badges;}
 export function getCatalog() { return catalog ??= readJson("catalog.json", catalogSchema); }
 export function getArea(areaSlug: string) { return getCatalog().areas.find(area => area.slug === areaSlug) ?? null; }
 export function getSubject(areaSlug: string, subjectSlug: string) { return getArea(areaSlug)?.subjects.find(subject => subject.slug === subjectSlug) ?? null; }
