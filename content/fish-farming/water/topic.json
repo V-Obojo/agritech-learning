@@ -1,17 +1,19 @@
 {
   "status": "draft-unreviewed",
-  "intentions": [
-    { "id": "curious", "label": "I'm just curious about fish farming", "welcome": "Great. You can learn the basics here with no commitment. Deciding fish farming isn't for you is a perfectly good outcome too." },
-    { "id": "considering", "label": "I'm thinking about starting", "welcome": "Good. Water is the first thing to check, so that's where we'll begin." },
-    { "id": "student", "label": "I'm studying agriculture", "welcome": "Welcome. This lesson connects what you study with the practical questions a beginner faces on a real site." }
+  "welcome": {
+    "curious": "Water is the first practical thing anyone checks before fish farming. You can explore it without having a site.",
+    "considering": "If you're thinking of starting, water is one of the first things to check. Let's look at it together.",
+    "student": "This topic connects what you study with the practical water questions a beginner faces on a real site."
+  },
+  "starterQuestions": [
+    "Why does the dry season matter for a fish pond?",
+    "Is borehole water good for catfish?",
+    "What are signs of poor pond water?"
   ],
-  "stages": [
-    { "id": "explore", "label": "Explore", "active": true },
-    { "id": "basics", "label": "Learn the basics", "active": true, "lessons": ["water-availability"] },
-    { "id": "decide", "label": "Decide if it suits me", "active": false },
-    { "id": "prepare", "label": "Prepare", "active": false },
-    { "id": "first-cycle", "label": "Learn through a first cycle", "active": false }
-  ],
+  "synonyms": {
+    "dry season": "dry periods",
+    "harmattan": "dry periods"
+  },
   "understandingCheck": [
     {
       "id": "uc-1",
@@ -36,7 +38,7 @@
     }
   ],
   "stuckHints": {
-    "lesson": "Try reading just wa-03 (Enough water, all year round). It holds the single most important idea in this lesson.",
+    "lesson": "Try reading just wa-03 (Enough water, all year round). It holds the single most important idea in this topic.",
     "activity-observe": "Start small: write what the source is, who uses it, and one thing you don't know about it in the dry season.",
     "activity-questions": "Copy two questions from the lesson checklist (wa-09) and add one of your own about the specific place.",
     "activity-fictional": "Re-read Amina's story and look for three facts: what happened in the dry season, where the stream is compared with the plot, and whether anything was tested.",
@@ -47,10 +49,11 @@
     { "id": "talk-farmer", "label": "Talk to an experienced local catfish farmer about their water", "chunks": ["wa-10"] },
     { "id": "dry-season-check", "label": "Ask people who use your water source how it behaves in the driest months", "chunks": ["wa-03", "wa-08"] },
     { "id": "testing", "label": "Find out where water can be tested in your area", "chunks": ["wa-05"] },
-    { "id": "pause", "label": "Pause here. You've learned the first thing to check, and you can come back any time", "chunks": [] }
+    { "id": "pause", "label": "Pause here. You've learned an important thing to check, and you can come back any time", "chunks": [] }
   ],
+  "defaultNextStep": { "considering": "dry-season-check", "default": "talk-farmer" },
   "unsupportedFallback": {
-    "message": "The lessons here don't cover that yet, so I can't give you a reliable answer.",
+    "message": "This topic doesn't cover that yet, so I can't give you a reliable answer.",
     "nextStep": "talk-extension"
   },
   "reminder": {

@@ -1,7 +1,10 @@
 # AGENTS.md
 
 ## Purpose
-Hackathon prototype: a mobile-friendly learning companion that helps a curious beginner in Nigeria understand **water availability for catfish farming**, ask a source-grounded AI guide questions, try an inclusive activity, get feedback, and continue with saved progress.
+Hackathon prototype: **Ovayi Farm** (a product of **Ovayi Foods**), a mobile-friendly learning companion for curious beginners in Nigeria. Home → area (Animal farming, Crop farming, Agro-processing) → subject (Fish farming is live; others coming soon) → a 5-topic fish path where 2 topics are live ("What is fish farming, and is it for me?" and "Water: do I have enough?"). Each live topic: lesson → source-grounded AI guide → inclusive activity → feedback → next steps, with progress saved on the device.
+
+- Content layout: see `content/README.md` (`catalog.json` → `<subject>/path.json` → `<subject>/<topic>/{lesson.md,topic.json,activity.json}`).
+- **Never hardcode** topic ids, subject/area names, chunk ids, people's names from scenarios, next-step ids or copy in `src/` (non-test). Read them from `content/`.
 
 - Product spec: `agritech-learning-brainstorm.md` (Part 2 is the build scope).
 - Outcomes and constraints: `GOALS.md`. Phase order and status: `PLANS.md`.

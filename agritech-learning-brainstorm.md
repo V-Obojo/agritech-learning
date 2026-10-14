@@ -13,6 +13,12 @@ This document records the product discussion so far. It starts with the full pro
 
 ---
 
+## Product name — Agreed
+
+**Ovayi Farm**, a product of **Ovayi Foods**.
+
+---
+
 ## Part 1: The complete product vision
 
 ### Problem — Agreed
@@ -134,9 +140,26 @@ One complete learning loop:
 5. **Receive feedback.**
 6. **Continue with saved progress** and a clear next step.
 
+### Product structure in the build — Agreed
+
+```
+Home (Ovayi Farm) → Animal farming → Fish farming → 5-topic path
+   Crop farming and Agro-processing: shown as coming soon
+   Poultry, Goats & sheep, Snails, Pigs: shown as coming soon
+```
+
+Fish path, in order:
+1. What is fish farming, and is it for me? (**live**)
+2. Meet the African catfish (coming soon)
+3. Water: do I have enough? (**live**)
+4. Space and setup options (coming soon)
+5. Time, costs and commitment (coming soon)
+
+Water is an important early topic but not the first thing a curious person needs, so it comes after an overview of what fish farming involves.
+
 ### Demonstration topic — Agreed
 
-**Water availability.** All content comes from expert-reviewed material. The prototype must not invent technical recommendations (for example, specific water-quality thresholds) that are not in the reviewed sources.
+**Water availability** (topic 3), alongside the introductory topic 1. All content comes from expert-reviewed material. The prototype must not invent technical recommendations (for example, specific water-quality thresholds) that are not in the reviewed sources.
 
 ### Inclusive activity — Agreed
 

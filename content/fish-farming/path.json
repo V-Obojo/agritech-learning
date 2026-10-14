@@ -1,0 +1,20 @@
+{
+  "subject": "fish-farming",
+  "status": "draft-unreviewed",
+  "title": "Fish farming",
+  "intro": "Fish farming means raising fish to feed your household or to sell. In Nigeria, the African catfish is by far the most farmed fish. This path walks you through what it involves, step by step, so you can decide whether it suits you, without needing a farm or any money to start learning.",
+  "whatYouWillLearn": [
+    "What fish farming involves, and whether it fits your life",
+    "What makes the African catfish a common choice",
+    "Whether you could have enough good water",
+    "The main setup options, from ponds to tanks",
+    "The time and costs involved before you commit"
+  ],
+  "topics": [
+    { "id": "what-is-fish-farming", "slug": "what-is-fish-farming", "order": 1, "title": "What is fish farming, and is it for me?", "summary": "What fish farming involves, why people do it, what you need, and the challenges farmers face.", "status": "live" },
+    { "id": "meet-the-catfish", "slug": "meet-the-catfish", "order": 2, "title": "Meet the African catfish", "summary": "Why catfish is a common beginner fish and what makes it hardy.", "status": "coming-soon" },
+    { "id": "water", "slug": "water", "order": 3, "title": "Water: do I have enough?", "summary": "Where pond water can come from, why year-round supply matters, and signs of good and poor water.", "status": "live" },
+    { "id": "setup-options", "slug": "setup-options", "order": 4, "title": "Space and setup options", "summary": "Earthen ponds, concrete tanks and other setups, and what each needs.", "status": "coming-soon" },
+    { "id": "time-costs", "slug": "time-costs", "order": 5, "title": "Time, costs and commitment", "summary": "What a first cycle asks of you in time and money before you commit.", "status": "coming-soon" }
+  ]
+}

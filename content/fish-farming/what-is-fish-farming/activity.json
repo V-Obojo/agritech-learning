@@ -1,0 +1,45 @@
+{
+  "id": "is-it-for-me-activity",
+  "lesson": "what-is-fish-farming",
+  "status": "draft-unreviewed",
+  "title": "Is fish farming for me?",
+  "intro": "Pick the option you're comfortable with. Both count as completing the activity. Nothing you write leaves this device except to get feedback.",
+  "paths": [
+    {
+      "id": "reflect",
+      "label": "Think about my own situation",
+      "prompt": "In a few sentences: why are you interested in fish farming, and what do you have or not have right now (time, space, water, money for costs like feed, someone to learn from)? What are you unsure about?",
+      "example": "I want extra income for my family. I work during the week but have weekends free. My parents have a compound with a well, but I don't know if it's enough water. I have small savings but don't know what feed costs. I don't know any fish farmers yet."
+    },
+    {
+      "id": "fictional",
+      "label": "Think about someone else's situation",
+      "prompt": "Read Tunde's situation. What does he already have, what is he missing or unsure about, and what would you suggest as his next step?",
+      "scenario": "Tunde (fictional) is 27 and works weekdays in an office in Ibadan. He rents a small flat with no outside space. His parents have a compound in their home town, about three hours away, with a hand-dug well. A friend told him catfish farming makes good money, and he has some savings. He has never farmed before and doesn't know any fish farmers.",
+      "modelPoints": [
+        { "point": "Tunde works weekdays far from the only possible site, so finding time for regular care is a real question.", "criterion": "time-care", "chunks": ["wf-05", "wf-07"] },
+        { "point": "His flat has no space; the family compound and its well are far away and the water supply is unknown.", "criterion": "space-water", "chunks": ["wf-05"] },
+        { "point": "Savings help, but feed and young fish are the highest costs farmers report, so he should learn what they cost.", "criterion": "money-costs", "chunks": ["wf-06"] },
+        { "point": "He has never farmed, so he'll need to learn new skills from someone.", "criterion": "skills-learning", "chunks": ["wf-05", "wf-08"] },
+        { "point": "'Good money' depends on managing costs; profitability isn't guaranteed.", "criterion": "motivation", "chunks": ["wf-04", "wf-06"] },
+        { "point": "A sensible next step is talking to an experienced farmer or extension agent, or continuing to learn before investing.", "criterion": "decision", "chunks": ["wf-07", "wf-08"] }
+      ]
+    }
+  ],
+  "rubric": [
+    { "id": "motivation", "description": "Says why they (or Tunde) are interested: food, income, business, or study.", "chunks": ["wf-02", "wf-07"], "keywords": ["income", "money", "food", "family", "business", "sell", "profit", "interest", "study", "protein"] },
+    { "id": "time-care", "description": "Considers the time and regular care fish farming needs.", "chunks": ["wf-05", "wf-07"], "keywords": ["time", "weekend", "weekdays", "daily", "busy", "work", "care", "hours", "far", "away"] },
+    { "id": "space-water", "description": "Considers access to land or space and reliable water.", "chunks": ["wf-05"], "keywords": ["land", "space", "compound", "water", "well", "borehole", "pond", "backyard", "site", "flat"] },
+    { "id": "money-costs", "description": "Considers costs such as feed and young fish, and how to cover them.", "chunks": ["wf-06"], "keywords": ["cost", "costs", "feed", "savings", "capital", "loan", "credit", "afford", "fingerlings", "price"] },
+    { "id": "skills-learning", "description": "Recognises skills to learn and someone to learn from.", "chunks": ["wf-05", "wf-08"], "keywords": ["learn", "skill", "skills", "experience", "never", "training", "teach", "extension", "farmer", "know"] },
+    { "id": "decision", "description": "Names an honest uncertainty or a sensible next step, including deciding not now.", "chunks": ["wf-07", "wf-08"], "keywords": ["?", "not sure", "unsure", "don't know", "maybe", "not now", "next step", "ask", "find out", "decide"] }
+  ],
+  "feedbackRules": [
+    "Be supportive and specific; reference lesson chunk ids.",
+    "Start with one thing done well (cite a rubric criterion).",
+    "Then one or two things to think about next (cite criterion and chunk).",
+    "End with a suggested next step taken from topic.json nextSteps.",
+    "Never judge whether the learner should or shouldn't farm; deciding not now is a valid outcome.",
+    "Never give technical prescriptions or cost figures that are not in the lesson."
+  ]
+}

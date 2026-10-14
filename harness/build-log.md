@@ -12,6 +12,10 @@ Observed progress and verification evidence. **Append-only**: add corrections as
 | 3 Feedback + help | Complete | 2026-10-14 | 2026-10-14 | `npm run verify`: 122 tests passed; dynamic feedback/help routes built | none |
 | 4 Learning UI | Complete | 2026-10-14 | 2026-10-14 | `npm run verify`: 131 tests; 375px mock flow and reload smoke passed | none |
 | 5 E2E + demo | Complete | 2026-10-14 | 2026-10-14 | 6/6 E2E specs; `npm run verify`: 132 tests and successful build | none |
+| R Restructure prep | Complete | 2026-10-14 | 2026-10-14 | content integrity script clean | none |
+| 6 Multi-topic model | Not started | | | | |
+| 7 Navigation UI | Not started | | | | |
+| 8 Journey E2E | Not started | | | | |
 
 ## Entry template
 
@@ -101,3 +105,16 @@ Observed progress and verification evidence. **Append-only**: add corrections as
 - Blockers / questions for human: none. Sandbox builds were not attempted because AGENTS.md requires approved external gates for the known Windows limitation. Playwright launched successfully outside the sandbox using existing Edge; no packages or browsers installed. No `.env.local` or secrets inspected/edited, no OpenAI/network calls, commits, pushes, branch changes, external writes or deployment.
 - Final plan status: Phase 5 Complete; Phases 1–5 Complete. The human backend checkpoint row remains Not started because its live smoke test/push has not been evidenced here.
 - Next action: stop. The human handles live review, GitHub push and deployment with approval.
+
+### 2026-10-14 — Step R — Restructure prep for Ovayi Farm (by Claude)
+- Status change: Not started → Complete
+- Checkpoint commit `ce64f89` (Phases 1–5) before changes.
+- Content restructured (human-authored step; Codex keeps content/ read-only):
+  - `content/catalog.json`: product Ovayi Farm / Ovayi Foods, intentions, 3 areas (animal live; crop + agro-processing coming soon) and their subjects.
+  - `content/fish-farming/path.json`: intro + 5 topics (what-is-fish-farming live, meet-the-catfish soon, water live, setup-options soon, time-costs soon).
+  - `content/fish-farming/what-is-fish-farming/`: new lesson (8 `wf-` chunks), topic.json, activity.json (reflect + fictional Tunde paths).
+  - `content/fish-farming/water/`: lesson moved from `content/lessons/water-availability.md` (retitled "Water: do I have enough?", id `water`), activity moved from `content/activity.json`, topic.json split from `content/pathway.json`, adding welcome/starterQuestions/synonyms/defaultNextStep.
+  - `content/pathway.json` removed; 2 FAO sources added (8 total).
+- Verification: node integrity script → what-is-fish-farming 8 chunks, water 10 chunks, problems [].
+- Expected breakage: existing loaders/tests reference the removed files; `npm run check` fails until Phase 06 migrates them. Not run.
+- Next action: Phase 06 goal from PROMPTS.md.

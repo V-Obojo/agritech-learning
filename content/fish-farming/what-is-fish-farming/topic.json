@@ -1,0 +1,66 @@
+{
+  "status": "draft-unreviewed",
+  "welcome": {
+    "curious": "Start here if you just want to understand what fish farming involves. No commitment needed.",
+    "considering": "Before spending anything, it's worth understanding what fish farming really involves. Let's start there.",
+    "student": "This topic gives the practical picture of catfish farming in Nigeria that sits behind what you study."
+  },
+  "starterQuestions": [
+    "Why do so many people in Nigeria farm catfish?",
+    "What do I need to start fish farming?",
+    "What are the biggest challenges for catfish farmers?"
+  ],
+  "synonyms": {
+    "start": "begin",
+    "starting": "begin",
+    "challenges": "challenge",
+    "problems": "challenge",
+    "fingerlings": "young fish"
+  },
+  "understandingCheck": [
+    {
+      "id": "uc-1",
+      "question": "Which of these is NOT listed as something you need to raise fish?",
+      "options": ["A reliable water supply", "A university degree", "Young fish and feed"],
+      "answerIndex": 1,
+      "chunk": "wf-05"
+    },
+    {
+      "id": "uc-2",
+      "question": "What did catfish farmers in the WorldFish survey name as their biggest challenges?",
+      "options": ["The price of feed and access to credit", "Too much rain", "Fish being too easy to sell"],
+      "answerIndex": 0,
+      "chunk": "wf-06"
+    },
+    {
+      "id": "uc-3",
+      "question": "You finish this topic and decide fish farming isn't for you right now. Is that a good outcome?",
+      "options": ["No, you should always start a farm", "Yes, deciding not now is a valid outcome", "Only if you are a student"],
+      "answerIndex": 1,
+      "chunk": "wf-07"
+    }
+  ],
+  "stuckHints": {
+    "lesson": "Try reading just wf-05 (What you need to raise fish). It's the most practical part of this topic.",
+    "activity-reflect": "Start with one sentence for each: why I'm interested, how much time I have, and one thing I don't know yet.",
+    "activity-fictional": "Re-read Tunde's situation and look for three things: where he lives compared with the possible site, what he has (savings), and what he's never done (farming).",
+    "guide": "Try asking about one idea at a time, for example: 'What do I need to start fish farming?'"
+  },
+  "nextSteps": [
+    { "id": "continue-water", "label": "Continue the path: check whether you could have enough water (topic 3)", "chunks": ["wf-05", "wf-08"] },
+    { "id": "talk-farmer", "label": "Talk to an experienced local catfish farmer about what their work involves", "chunks": ["wf-08"] },
+    { "id": "talk-extension", "label": "Find out if there is a fisheries extension agent or fish culture station near you", "chunks": ["wf-08"] },
+    { "id": "pause", "label": "Pause here. Understanding what's involved is a useful outcome, and you can come back any time", "chunks": ["wf-07"] }
+  ],
+  "defaultNextStep": { "considering": "continue-water", "default": "talk-farmer" },
+  "unsupportedFallback": {
+    "message": "This topic doesn't cover that yet, so I can't give you a reliable answer.",
+    "nextStep": "talk-extension"
+  },
+  "reminder": {
+    "optional": true,
+    "demoOnly": true,
+    "label": "Remind me to continue the fish farming path in a week",
+    "preview": "Hi! Last week you explored what fish farming involves. Ready to look at whether you could have enough water?"
+  }
+}

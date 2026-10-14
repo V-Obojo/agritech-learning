@@ -1,0 +1,58 @@
+{
+  "status": "draft-unreviewed",
+  "product": {
+    "name": "Ovayi Farm",
+    "parent": "Ovayi Foods",
+    "tagline": "Learn farming at your own pace, one practical step at a time.",
+    "pitch": "Explore a farming activity, understand what it really involves, and find a sensible next step. No sign-up, no farm needed, no pressure to invest.",
+    "region": "Nigeria"
+  },
+  "intentions": [
+    { "id": "curious", "label": "I'm just curious about farming" },
+    { "id": "considering", "label": "I'm thinking about starting" },
+    { "id": "student", "label": "I'm studying agriculture" }
+  ],
+  "areas": [
+    {
+      "id": "animal-farming",
+      "slug": "animal-farming",
+      "label": "Animal farming",
+      "blurb": "Raising fish, birds and animals for food and income.",
+      "status": "live",
+      "subjects": [
+        { "id": "fish-farming", "slug": "fish-farming", "label": "Fish farming", "blurb": "Catfish farming basics for beginners in Nigeria.", "status": "live", "path": "fish-farming" },
+        { "id": "poultry", "slug": "poultry", "label": "Poultry", "blurb": "Chickens for eggs and meat.", "status": "coming-soon" },
+        { "id": "goats-sheep", "slug": "goats-sheep", "label": "Goats & sheep", "blurb": "Small ruminants for meat and income.", "status": "coming-soon" },
+        { "id": "snails", "slug": "snails", "label": "Snails", "blurb": "Snail farming as a small-space option.", "status": "coming-soon" },
+        { "id": "pigs", "slug": "pigs", "label": "Pigs", "blurb": "Pig farming basics.", "status": "coming-soon" }
+      ]
+    },
+    {
+      "id": "crop-farming",
+      "slug": "crop-farming",
+      "label": "Crop farming",
+      "blurb": "Growing food crops for the table and the market.",
+      "status": "coming-soon",
+      "subjects": [
+        { "id": "vegetables", "slug": "vegetables", "label": "Vegetables", "blurb": "Leafy and fruit vegetables.", "status": "coming-soon" },
+        { "id": "cassava", "slug": "cassava", "label": "Cassava", "blurb": "A staple root crop.", "status": "coming-soon" },
+        { "id": "maize", "slug": "maize", "label": "Maize", "blurb": "Grain for food and feed.", "status": "coming-soon" },
+        { "id": "rice", "slug": "rice", "label": "Rice", "blurb": "Lowland and upland rice.", "status": "coming-soon" },
+        { "id": "plantain", "slug": "plantain", "label": "Plantain", "blurb": "Plantain and banana.", "status": "coming-soon" }
+      ]
+    },
+    {
+      "id": "agro-processing",
+      "slug": "agro-processing",
+      "label": "Agro-processing",
+      "blurb": "Turning farm produce into food products.",
+      "status": "coming-soon",
+      "subjects": [
+        { "id": "garri-cassava-products", "slug": "garri-cassava-products", "label": "Garri & cassava products", "blurb": "Processing cassava into garri and more.", "status": "coming-soon" },
+        { "id": "palm-oil", "slug": "palm-oil", "label": "Palm oil", "blurb": "Palm fruit processing.", "status": "coming-soon" },
+        { "id": "fish-smoking-drying", "slug": "fish-smoking-drying", "label": "Fish smoking & drying", "blurb": "Preserving fish after harvest.", "status": "coming-soon" },
+        { "id": "feed-making", "slug": "feed-making", "label": "Feed making", "blurb": "Making animal and fish feed.", "status": "coming-soon" }
+      ]
+    }
+  ]
+}

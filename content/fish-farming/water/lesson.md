@@ -1,6 +1,6 @@
 ---
-id: water-availability
-title: Is there enough good water? A first look for catfish farming
+id: water
+title: Water: do I have enough?
 species: African catfish (Clarias gariepinus)
 region: Nigeria (general)
 status: draft-unreviewed

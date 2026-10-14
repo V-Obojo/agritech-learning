@@ -83,3 +83,48 @@ Iteration: run the failing spec first, fix, then rerun the full suites.
 Blocked: if Playwright cannot launch in the sandbox, record the exact error in harness/build-log.md and stop.
 Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop.
 ```
+
+---
+
+# Restructure: Ovayi Farm (phases 6–8)
+
+Content was restructured by Claude (step R in PLANS.md). Run these in order, one fresh Codex session (`/new`) each, approving between phases.
+
+## Phase 6: Multi-topic content model + APIs
+
+```
+/goal Complete Phase 06 exactly as specified in harness/build/phase-06-multi-topic-model.md.
+Outcome: content loaders, integrity checks, the guide, feedback and help APIs work for any live topic described in content/ (catalog.json → <subject>/path.json → <subject>/<topic>/{lesson.md,topic.json,activity.json}), with topicId on every API, and no topic ids, names or copy hardcoded in src/ (non-test).
+Verify: `npm run check` then `npm run verify` (outside the sandbox, ask approval) pass, with unit tests for: catalog (3 areas), fish path (5 topics, 2 live), both topics loading (8 wf- and 10 wa- chunks), integrity clean + fixture failures, guide citing wf-05 for "What do I need to start fish farming?" and wa-03 for the dry-season question, unsupported fallback per topic, 400 for unknown/coming-soon topics, feedback for reflect/fictional (Tunde) and the existing water paths, and help per topic. The grep in the phase file finds hardcoded names only in tests.
+Constraints: AGENTS.md hard rules. content/ is read-only (it is already correct; npm run check failing at the start is expected). No new deps, no network, don't read .env.local. Keep UI changes minimal (only what's needed to compile against the new loaders). E2E may stay red until Phase 08.
+Boundaries: src/lib/content/**, src/lib/guide/**, src/lib/feedback/**, src/app/api/**, minimal call-site fixes in src/app/** and src/components/**, unit tests.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run `npm run verify` outside the sandbox (ask for approval).
+Blocked: if content seems wrong or a decision is missing, stop and log it in harness/build-log.md.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop. Do not start Phase 07.
+```
+
+## Phase 7: Ovayi Farm navigation + per-topic UI
+
+```
+/goal Complete Phase 07 exactly as specified in harness/build/phase-07-navigation-ui.md.
+Outcome: the phone-first journey Home (Ovayi Farm by Ovayi Foods, intention question, 3 area cards) → /[area] → /[area]/[subject] (fish hub with intro, 5-topic path and status, or a coming-soon page) → /[area]/[subject]/[topic] lesson → /activity → /next for every live topic, statically generated from content/, with breadcrumbs, progress v2 per topic (agri-progress-v2, lastPath resume), and the green + earthy palette. The old /lesson, /activity, /next pages are removed and the "first step for curious beginners" line is gone.
+Verify: `npm run check` then `npm run verify` (outside the sandbox, ask approval) pass, including progress v2 unit tests and a generateStaticParams test; the manual smoke journey in the phase file passes in mock mode and is recorded in the build log.
+Constraints: AGENTS.md hard rules. No hardcoded topic/subject names, routes or copy in src/ (read from content/). Don't modify content/ or the Phase 06 API contracts. No new deps, no images, no remote assets, don't read .env.local. Client components must not import server-only modules.
+Boundaries: src/app/** (pages, layout, not-found, globals.css), src/components/**, src/lib/progress.ts, tests/manual/**, unit tests.
+Iteration: run `npm run check` after each change and fix the first failing check; when green, run `npm run verify` outside the sandbox (ask for approval).
+Blocked: stop and log in harness/build-log.md.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop. Do not start Phase 08.
+```
+
+## Phase 8: E2E + demo polish for the full journey
+
+```
+/goal Complete Phase 08 exactly as specified in harness/build/phase-08-journey-e2e.md.
+Outcome: metrics events carry subjectId/topicId (plus area_opened, subject_opened, topic_opened), the 6 existing Playwright specs are updated to the new routes, a new navigation.spec.ts proves Home → Animal farming → Fish farming hub → topic 1 loop (wf-05 citation, Tunde path) → hub shows Done → water topic (wa-03 citation) → coming-soon pages, and the README describes Ovayi Farm with a demo script matching the navigation spec.
+Verify: `npm run test:e2e` passes all specs and `npm run verify` passes (both outside the sandbox, ask approval).
+Constraints: AGENTS.md hard rules. Mock mode only, no new deps, no browser downloads, don't modify content/, don't read .env.local. Fix bugs the tests reveal without redesigning.
+Boundaries: tests/e2e/**, src/lib/metrics.ts, minimal fixes in src/**, README.md.
+Iteration: run the failing spec first, fix, then rerun the full suites.
+Blocked: if Playwright cannot launch, record the exact error in harness/build-log.md and stop.
+Done: append evidence to harness/build-log.md, update PLANS.md + log table, summarize, and stop.
+```
