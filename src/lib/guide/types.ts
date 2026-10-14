@@ -2,6 +2,8 @@ import { z } from "zod";
 
 const text = z.string().trim().min(1);
 export const guideRequestSchema = z.object({
+  topicId: text,
+  subjectId: text.optional(),
   question: text.max(500),
   intention: z.enum(["curious", "considering", "student"]).optional(),
   history: z.array(z.object({

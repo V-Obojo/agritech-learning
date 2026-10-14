@@ -5,11 +5,13 @@ vi.mock("openai", () => ({ default: class {
   responses = { parse: sdk.parse };
   constructor(options: unknown) { sdk.construct(options); }
 } }));
-import { getActivity, getChunks } from "../content";
+import { getTopic } from "../content";
+const getActivity = () => getTopic("fish-farming", "water").activity;
+const getChunks = (ids: string[]) => ids.map(id => getTopic("fish-farming", "water").lesson.chunks.find(chunk => chunk.id === id)!);
 import { buildFeedbackPrompt, liveFeedback } from "./openai";
 import { mockFeedback } from "./mock";
 
-const request = { pathId: "fictional" as const,
+const request = { topicId: "water", pathId: "fictional" as const,
   response: "Amina's well gets low during the dry season and neither source has been tested." };
 beforeEach(() => {
   vi.stubEnv("OPENAI_MODEL", "test-model");

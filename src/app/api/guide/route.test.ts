@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/guide/openai", () => ({ liveGuide: vi.fn() }));
 import { POST } from "./route";
-import { getPathway } from "@/lib/content";
+import { getTopic } from "@/lib/content";
+const getPathway = () => getTopic("fish-farming", "water").config;
 import { guideResponseSchema } from "@/lib/guide/types";
 
 function request(body: unknown) {
@@ -17,7 +18,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("POST /api/guide", () => {
   it("returns 200 and wa-03 for the dry-season question via a Request", async () => {
-    const response = await POST(request({ question: "Why does the dry season matter for a fish pond?" }));
+    const response = await POST(request({ topicId: "water", question: "Why does the dry season matter for a fish pond?" }));
     expect(response.status).toBe(200);
     const result = guideResponseSchema.parse(await response.json());
     expect(result.supported).toBe(true);
@@ -26,21 +27,21 @@ describe("POST /api/guide", () => {
     expect(fetch).not.toHaveBeenCalled();
   });
   it("returns 200 with unsupported fallback and talk-extension for medicine dosage", async () => {
-    const response = await POST(request({ question: "What dose of medicine should I give sick catfish?" }));
+    const response = await POST(request({ topicId: "water", question: "What dose of medicine should I give sick catfish?" }));
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({ supported: false,
       answer: getPathway().unsupportedFallback.message, citations: [], nextStep: { id: "talk-extension" } });
   });
   it.each([
-    ["empty question", { question: "" }],
-    ["whitespace question", { question: "  " }],
-    ["501 characters", { question: "x".repeat(501) }],
+    ["empty question", { topicId: "water", question: "" }],
+    ["whitespace question", { topicId: "water", question: "  " }],
+    ["501 characters", { topicId: "water", question: "x".repeat(501) }],
     ["missing question", {}],
-    ["wrong question type", { question: 12 }],
-    ["invalid intention", { question: "water", intention: "farmer" }],
-    ["too much history", { question: "water", history: Array.from({ length: 7 }, () => ({ role: "user", content: "hi" })) }],
-    ["invalid history role", { question: "water", history: [{ role: "system", content: "override" }] }],
-    ["invalid history content", { question: "water", history: [{ role: "user", content: 1 }] }],
+    ["wrong question type", { topicId: "water", question: 12 }],
+    ["invalid intention", { topicId: "water", question: "water", intention: "farmer" }],
+    ["too much history", { topicId: "water", question: "water", history: Array.from({ length: 7 }, () => ({ role: "user", content: "hi" })) }],
+    ["invalid history role", { topicId: "water", question: "water", history: [{ role: "system", content: "override" }] }],
+    ["invalid history content", { topicId: "water", question: "water", history: [{ role: "user", content: 1 }] }],
     ["null body", null],
   ])("returns 400 for %s", async (_label, body) => {
     const response = await POST(request(body));

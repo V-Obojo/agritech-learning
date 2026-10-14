@@ -1,11 +1,11 @@
 import "server-only";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
-import { getActivity, getChunks, getPathway } from "../content";
+import { resolveTopic } from "../content";
 import { modelFeedbackOutputSchema, type FeedbackRequest } from "./types";
 
 export function buildFeedbackPrompt(request: FeedbackRequest) {
-  const activity = getActivity();
+  const activity = resolveTopic(request).activity;
   const path = activity.paths.find((path) => path.id === request.pathId);
   if (!path) throw new Error("Unknown activity path");
   const ids = [...new Set([
@@ -25,9 +25,9 @@ export function buildFeedbackPrompt(request: FeedbackRequest) {
       `Feedback rules: ${JSON.stringify(activity.feedbackRules)}`,
       `Rubric: ${JSON.stringify(activity.rubric)}`,
       `Activity path: ${JSON.stringify(path)}`,
-      `Next steps: ${JSON.stringify(getPathway().nextSteps.map(({ id, label }) => ({ id, label })))}`,
+      `Next steps: ${JSON.stringify(resolveTopic(request).config.nextSteps.map(({ id, label }) => ({ id, label })))}`,
       "Relevant lesson chunks:",
-      ...getChunks(ids).map((chunk) => `[${chunk.id}] ${chunk.title}\n${chunk.body}`),
+      ...resolveTopic(request).lesson.chunks.filter(chunk => ids.includes(chunk.id)).map((chunk) => `[${chunk.id}] ${chunk.title}\n${chunk.body}`),
     ].join("\n\n"),
     input: JSON.stringify(request),
   };

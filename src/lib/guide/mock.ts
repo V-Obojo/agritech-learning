@@ -1,5 +1,5 @@
 import "server-only";
-import { getLesson, getPathway } from "../content";
+import { resolveTopic } from "../content";
 import type { GuideRequest, ModelGuideOutput } from "./types";
 
 const stopWords = new Set(
@@ -8,22 +8,25 @@ const stopWords = new Set(
 const outOfScope = /\b(doses?|dosages?|medicines?|drugs?|treat(?:s|ed|ing|ment)?|disease\s+cure|prices?|loans?|credit|feed\s+formula|stocking\s+density)\b/i;
 const minimumScore = 2;
 
-function keywords(text: string): Set<string> {
-  // wa-03 calls this "dry periods"; normalize the learner's equivalent phrase.
-  const normalized = text.toLowerCase().replace(/\bdry[\s-]+season\b/g, "dry periods");
+function keywords(text: string, synonyms: Record<string, string>): Set<string> {
+  let normalized = text.toLowerCase();
+  for (const [from, to] of Object.entries(synonyms).sort((a, b) => b[0].length - a[0].length)) {
+    const escaped = from.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "[\\s-]+");
+    normalized = normalized.replace(new RegExp(`\\b${escaped}\\b`, "g"), () => to.toLowerCase());
+  }
   return new Set((normalized.match(/[a-z0-9]+/g) ?? []).filter((word) => !stopWords.has(word)));
 }
 
 export function mockGuide(request: GuideRequest): ModelGuideOutput {
-  const pathway = getPathway();
+  const pathway = resolveTopic(request).config;
   const unsupported: ModelGuideOutput = {
     answer: pathway.unsupportedFallback.message, supported: false, citedChunkIds: [],
     nextStepId: pathway.unsupportedFallback.nextStep,
   };
   if (outOfScope.test(request.question)) return unsupported;
-  const questionWords = keywords(request.question);
-  const ranked = getLesson().chunks.map((chunk) => {
-    const chunkWords = keywords(`${chunk.title} ${chunk.body}`);
+  const questionWords = keywords(request.question, pathway.synonyms);
+  const ranked = resolveTopic(request).lesson.chunks.map((chunk) => {
+    const chunkWords = keywords(`${chunk.title} ${chunk.body}`, pathway.synonyms);
     const score = [...questionWords].filter((word) => chunkWords.has(word)).length;
     return { chunk, score };
   }).sort((a, b) => b.score - a.score || a.chunk.id.localeCompare(b.chunk.id));

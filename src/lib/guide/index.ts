@@ -1,5 +1,5 @@
 import "server-only";
-import { getLesson, getPathway, getSources } from "../content";
+import { resolveTopic, getSources } from "../content";
 import { mockGuide } from "./mock";
 import { liveGuide } from "./openai";
 import {
@@ -7,10 +7,10 @@ import {
   type GuideMode, type GuideRequest, type GuideResponse,
 } from "./types";
 
-export function postValidateGuideOutput(value: unknown, mode: GuideMode): GuideResponse {
+export function postValidateGuideOutput(value: unknown, mode: GuideMode, request: Pick<GuideRequest, "topicId" | "subjectId">): GuideResponse {
   const output = modelGuideOutputSchema.parse(value);
-  const pathway = getPathway();
-  const chunks = getLesson().chunks;
+  const pathway = resolveTopic(request).config;
+  const chunks = resolveTopic(request).lesson.chunks;
   const sources = getSources().sources;
   const citations = [...new Set(output.citedChunkIds)].flatMap((id) => {
     const chunk = chunks.find((chunk) => chunk.id === id);
@@ -38,16 +38,17 @@ export function postValidateGuideOutput(value: unknown, mode: GuideMode): GuideR
 
 export async function answerQuestion(request: GuideRequest): Promise<GuideResponse> {
   const validated = guideRequestSchema.parse(request);
+  resolveTopic(validated);
   if (process.env.GUIDE_MODE === "live" && process.env.OPENAI_API_KEY) {
     try {
-      return postValidateGuideOutput(await liveGuide(validated), "live");
+      return postValidateGuideOutput(await liveGuide(validated), "live", validated);
     } catch (error) {
       // Log a safe error category, never SDK payloads, prompts, or credentials.
       console.error("Live guide failed; using mock fallback", {
         name: error instanceof Error ? error.name : "UnknownError",
       });
-      return postValidateGuideOutput(mockGuide(validated), "mock-fallback");
+      return postValidateGuideOutput(mockGuide(validated), "mock-fallback", validated);
     }
   }
-  return postValidateGuideOutput(mockGuide(validated), "mock");
+  return postValidateGuideOutput(mockGuide(validated), "mock", validated);
 }

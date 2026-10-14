@@ -32,12 +32,12 @@ export const activitySchema = z.object({
   })).min(1),
   feedbackRules: texts.min(1),
 });
-export const pathwaySchema = z.object({
+export const topicConfigSchema = z.object({
   status: text,
-  intentions: z.array(z.object({ id: text, label: text, welcome: text })).min(1),
-  stages: z.array(z.object({
-    id: text, label: text, active: z.boolean(), lessons: texts.optional(),
-  })).min(1),
+  welcome: z.record(text, text),
+  starterQuestions: texts,
+  synonyms: z.record(text, text),
+  defaultNextStep: z.record(text, text),
   understandingCheck: z.array(z.object({
     id: text, question: text, options: texts.min(1),
     answerIndex: z.number().int().nonnegative(), chunk: text,
@@ -57,4 +57,24 @@ export type Sources = z.infer<typeof sourcesSchema>;
 export type LessonChunk = z.infer<typeof lessonChunkSchema>;
 export type Lesson = z.infer<typeof lessonSchema>;
 export type Activity = z.infer<typeof activitySchema>;
-export type Pathway = z.infer<typeof pathwaySchema>;
+const availability = z.enum(["live", "coming-soon"]);
+export const catalogSchema = z.object({
+  status: text,
+  product: z.object({ name: text, parent: text, tagline: text, pitch: text, region: text }),
+  intentions: z.array(z.object({ id: text, label: text })).min(1),
+  areas: z.array(z.object({
+    id: text, slug: text, label: text, blurb: text, status: availability,
+    subjects: z.array(z.object({ id: text, slug: text, label: text, blurb: text, status: availability, path: text.optional() })),
+  })).min(1),
+});
+export const subjectPathSchema = z.object({
+  subject: text, status: text, title: text, intro: text, whatYouWillLearn: texts,
+  topics: z.array(z.object({ id: text, slug: text, order: z.number().int().positive(), title: text, summary: text, status: availability })).min(1),
+});
+export type Catalog = z.infer<typeof catalogSchema>;
+export type SubjectPath = z.infer<typeof subjectPathSchema>;
+export type TopicConfig = z.infer<typeof topicConfigSchema>;
+export type Topic = { meta: SubjectPath["topics"][number]; lesson: Lesson; config: TopicConfig; activity: Activity };
+
+// Compatibility props for the existing UI until route-driven navigation.
+export type Pathway = TopicConfig & { topicId: string; subjectId: string; title: string; summary: string; estimatedMinutes: number; intentions: (Catalog["intentions"][number] & { welcome: string })[]; stages: { id: string; label: string; active: boolean }[] };

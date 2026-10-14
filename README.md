@@ -1,8 +1,10 @@
-# Fish Farming Basics
+# Ovayi Farm
 
-A hackathon learning companion for curious beginners in Nigeria exploring **water availability for catfish farming**. The phone-first flow is welcome → lesson → source-grounded guide → inclusive activity → feedback → next steps. No farm access, sign-up or commitment to invest is required.
+**Ovayi Farm, by Ovayi Foods**, is a phone-first learning companion for curious beginners in Nigeria. Explore an area → subject path → topic lesson → source-grounded guide → inclusive activity → feedback → next steps. No sign-up, farm access or commitment to invest is needed.
 
-> **Draft content:** material in `content/` is sourced from public references but has **not been reviewed by a fisheries expert**. The app shows the draft review note. This prototype is a learning demonstration, not a source of live diagnosis or unsupported technical prescriptions.
+The catalog has **Animal farming**, **Crop farming** and **Agro-processing**. Fish farming is the live subject, with five authored topics. Two are available: **What is fish farming, and is it for me?** and **Water: do I have enough?** The other topics, subjects and areas are labelled coming soon.
+
+> **Draft content:** material in `content/` is sourced from public references and has not been reviewed by a fisheries expert. Lessons show the review note and sources. The guide answers only from the current topic's lesson chunks, with citations; unsupported questions receive an honest limitation and an authored next step.
 
 ## Setup
 
@@ -11,70 +13,91 @@ Use Node.js 24 and npm. For a fresh checkout:
 ```powershell
 npm install
 Copy-Item .env.example .env.local
+$env:GUIDE_MODE = 'mock'
 npm run dev
 ```
 
-Open http://localhost:3000. Keep an existing settings file when returning to the project. Dependencies are already installed in the prepared hackathon workspace; automated phase work does not install packages or download browsers.
+Open [localhost:3000](http://localhost:3000). Keep an existing settings file when returning. Dependencies are already installed in the prepared hackathon workspace; automated phase work does not install packages or download browsers.
 
 ## Mock and live modes
 
-- `GUIDE_MODE=mock` is the default. The guide uses deterministic lesson excerpts; feedback uses the authored rubric. No API key or OpenAI call is needed.
-- Live mode requires `GUIDE_MODE=live`, `OPENAI_API_KEY`, and `OPENAI_MODEL` set to a Responses API model supporting structured outputs. Configure these yourself in `.env.local`; never commit or share that file. Restart the server after changing settings.
-- A live-provider error uses the deterministic mock with `mode: "mock-fallback"`. Citations, rubric ids and next steps are checked against authored content. Unsupported guide questions use the authored limitation and next step.
-- Unit and E2E tests explicitly use mock mode even if your personal settings select live mode. Browser tests block external requests; only the local app is contacted.
+- `GUIDE_MODE=mock` is the default. The guide retrieves deterministic lesson excerpts using authored topic synonyms; feedback uses that topic's rubric and model points. No API key or OpenAI call is needed.
+- Live mode requires `GUIDE_MODE=live`, `OPENAI_API_KEY` and `OPENAI_MODEL` set to a Responses API model supporting structured outputs. Configure these yourself in `.env.local`, never commit or share that file, and restart the server after changing settings.
+- A live-provider error uses the mock with `mode: "mock-fallback"`. Citations, rubric ids and next steps are checked against the requested topic; citations from another topic are invalid.
+- Unit and E2E tests explicitly use mock mode even if personal settings select live mode. Browser tests block external requests and assert mock API responses.
 
 ## Scripts
 
 | Command | Purpose |
 |---|---|
 | `npm run dev` | Development server on port 3000 |
-| `npm run check` | Lint, typecheck and unit tests |
+| `npm run check` | Lint, typecheck and mock unit tests |
 | `npm run verify` | Check plus production build |
 | `npm run test` | Unit tests in mock mode |
-| `npm run test:e2e` | Build and serve on port 3100, then run six mobile Playwright specs in mock mode |
+| `npm run test:e2e` | Build and serve on port 3100; seven mobile Playwright specs in mock mode |
 | `npm run build` | Production build |
 | `npm run start` | Serve the production build |
 
-On the Windows demo machine, E2E specs use the already-installed Microsoft Edge channel. On other platforms, they use preinstalled Playwright Chromium. No browser downloads run as part of the tests. The shared fixture applies the existing 375px mobile project settings and fails on browser errors or external requests.
+On Windows, E2E uses the already-installed Microsoft Edge channel. Other platforms use preinstalled Playwright Chromium. The shared fixture enforces the 375px viewport, reports browser errors and blocks external requests. No browser download runs during tests.
 
-The Windows Codex sandbox has a documented Next.js build limitation. Run `npm run check` inside it, and request approval to run `npm run verify` and `npm run test:e2e` outside it. See [AGENTS.md](AGENTS.md) and [build evidence](harness/build-log.md).
+The Windows Codex sandbox has a documented Next.js build limitation. Run `npm run check` inside it and request approval for `npm run verify` and `npm run test:e2e` outside it. See [AGENTS.md](AGENTS.md) and [build evidence](harness/build-log.md).
 
-## Five-step demo
+## Six-step demo
 
-1. On `/`, select **I'm just curious about fish farming** and start the lesson. Show the authored learning stages, draft warning and a **Sources** disclosure.
-2. On `/lesson`, answer the three understanding questions. Ask **Why does the dry season matter?** and tap the `wa-03` citation. Then ask **What dose of medicine should I give sick catfish?** to show the honest limitation, next step and absence of citations.
-3. On `/activity`, show the three inclusive paths. The observe and questions paths reveal authored examples; the fictional path shows Amina's story and needs no farm access.
-4. Submit **idk**, show the hint, and tap **Stuck?**. Retry with an authored example or a response to Amina's scenario, such as: **Amina's well ran low in the dry season. She needs to find out about testing the water.** Show the strength, considerations and chunk links.
-5. Continue to `/next`. Show the recommended and other next steps, **Your session**, and the optional reminder preview labelled **Demo: reminders are not sent in this prototype**. Choose **Yes** to return. Reload to demonstrate saved progress; the welcome page offers **Continue where you left off**. **Start over** clears this app's progress and local event log.
+This follows `tests/e2e/navigation.spec.ts`. Use mock mode for a repeatable demo; start with fresh app progress on the device.
 
-## Local progress and metrics
+1. Open `/`. Show **Ovayi Farm**, **by Ovayi Foods**, the tagline and pitch, and the three area cards. Choose **I'm thinking about starting**. Open **Animal farming**, then **Fish farming**. Show the subject intro, five-topic path and three coming-soon topics; those topics are not links in the hub.
+2. Select **Start** to open **What is fish farming, and is it for me?** Show the draft warning and sources, answer the understanding check, then ask **What do I need to start fish farming?** Show the `wf-05` citation, which links to its lesson chunk.
+3. Select **Try the activity**. Choose **Think about someone else's situation**, read Tunde's fictional situation and submit: **Tunde works weekdays far from the site and has some savings. He should learn from an experienced farmer before investing.** Show completed feedback and chunk links, then **See my next steps**. Show **Next topic: Water: do I have enough?**
+4. Select **Back to Fish farming path**. The first topic is **Done**, and the primary action reads **Continue: Water: do I have enough?**
+5. Continue to the water lesson. Ask **Why does the dry season matter for a fish pond?** and show the `wa-03` citation. Use **Try the activity → Pause and see next steps** to show that water's session has its own check score and completion status. It does not inherit topic 1's completed activity.
+6. Return home and open **Crop farming** to show its coming-soon subjects and a way back. Open **Animal farming → Poultry** to show the friendly coming-soon page, the link back to the area and the available fish path.
 
-`agri-progress-v1` stores intention, lesson/check progress, guide count, the activity draft/feedback, reminder opt-in and return preference on the device. Reloads resume progress when localStorage is available; blocked storage falls back to memory for the current page session.
+For additional demonstrations, the water topic offers observation, question-writing and Amina's fictional scenario. Submit **idk**, then tap **Stuck?** to reveal authored help; retry using an example or a scenario response. Ask **What dose of medicine should I give sick catfish?** to show the limitation and next step with no citations. Next-step pages offer a reminder preview explicitly labelled **Demo: reminders are not sent in this prototype** and a would-return poll. Reload or use the home **Continue where you left off** card to resume the last topic page. **Start over** on a next-step page clears this app's progress and event log.
 
-`agri-events-v1` contains timestamped local events: `intention_chosen`, `lesson_viewed`, `check_answered`, `guide_asked`, `guide_unsupported`, `help_requested`, `activity_submitted`, `activity_completed`, and `would_return`. Events contain small choice/status fields, not question or answer text, and are never sent to an analytics service. Lesson viewed is recorded once per saved learning session; retries and changed choices append new events. Your session shows completed activity, current check score and return preference.
+## Routes
 
-## Project structure
+| Route | Page |
+|---|---|
+| `/` | Catalog home, intention choice and last-page resume |
+| `/[area]` | Area description and subject cards |
+| `/[area]/[subject]` | Subject hub or coming-soon page |
+| `/[area]/[subject]/[topic]` | Topic lesson, check, guide and authored help; coming-soon topics have a friendly view |
+| `/[area]/[subject]/[topic]/activity` | Inclusive topic activity and feedback |
+| `/[area]/[subject]/[topic]/next` | Topic session summary, next steps, optional reminder demo and return poll |
+| `/api/guide`, `/api/feedback`, `/api/help` | Topic-validated JSON POST APIs |
 
-- `src/app/`: welcome, lesson, activity and next-step pages; guide, feedback and help API routes.
-- `src/components/`: small interactive learning-flow components; server pages supply authored content.
-- `src/lib/content/`: typed loaders, lesson parser and integrity checker.
+Areas, subjects and live topic pages are generated from the catalog/path. Every non-home page has breadcrumbs. Unknown slugs show a page linking home. The old top-level `/lesson`, `/activity` and `/next` pages were removed.
+
+## Device progress and metrics
+
+`agri-progress-v2` stores a global intention, topic records keyed by `<subjectId>/<topicId>`, per-topic reminder choices, return preference and `lastPath`. Each topic record has viewed status, check answers, guide count, activity draft/feedback and completion. Home resumes the exact last topic page; the hub shows each topic's status. V1 progress is ignored. When localStorage is blocked, the app falls back to memory for the current page session.
+
+`agri-events-v1` stores timestamped local events. `area_opened` identifies the area; `subject_opened` identifies area and subject; `topic_opened` identifies area, subject and topic. Topic learning events (`lesson_viewed`, `check_answered`, `guide_asked`, `guide_unsupported`, `help_requested`, `activity_submitted`, `activity_completed`, `would_return`) carry `subjectId` and `topicId`. The intention choice is global. Navigation opens record page visits; `lesson_viewed` is recorded once per saved topic. Retries and changed choices append events. Older topic events without identifiers are ignored while valid records are kept.
+
+Events contain small choice/status fields, not learner question or response text, and are never sent to an analytics service. **Your session** shows the current topic's completed activity and check score, plus the global would-return preference. These local self-reports do not establish retention.
+
+## Content and project layout
+
+- `content/catalog.json`: product, intentions, areas and subjects.
+- `content/sources.json`: shared sources.
+- `content/<subject.path>/path.json`: subject intro and ordered topic metadata.
+- `content/<subject.path>/<topic-id>/{lesson.md,topic.json,activity.json}`: lesson chunks, topic configuration and activity/rubric for each live topic.
+- `src/app/`: content-driven pages and API handlers.
+- `src/components/`: small interactive learning and navigation components.
+- `src/lib/content/`: validated loaders, lesson parser and integrity checks.
 - `src/lib/guide/`, `src/lib/feedback/`: mock/live providers and post-validation.
 - `src/lib/progress.ts`, `src/lib/metrics.ts`: device progress and local events.
-- `content/`: authored draft lesson, source list, activity and pathway.
-- `tests/e2e/`: full loop, no-farm-access, stuck help, unsupported question, resume and 375px overflow specs.
-- `tests/manual/`: the Phase 04 development-flow smoke script.
-- `harness/`: phase specifications and observed build evidence.
+- `tests/e2e/`: navigation, full water loop, no farm access, stuck help, unsupported question, resume/reset and mobile layout.
+- `tests/manual/`: development smoke scripts, including the Phase 07 journey.
+- `harness/`: phase specifications and observed evidence.
 
-## Editing learning material
-
-Humans maintain the authored content; automated agents treat it as read-only. Follow [content/README.md](content/README.md) for frontmatter, chunk headings and source ids. Keep chunk ids stable, cite source ids from `sources.json`, and update rubric/pathway references consistently. Do not add technical prescriptions without cited support. Run the content integrity/unit tests and both verification suites after a human content edit. Agricultural content still needs expert review.
+Humans maintain `content/`; automated agents treat it as read-only. Follow [content/README.md](content/README.md) for metadata, chunk headings, source ids, references and topic layout. Keep ids stable, cite known sources and keep config/activity references local to the topic. Do not add technical prescriptions without cited support. Run integrity/unit tests and both verification suites after a human content edit. Agricultural material still needs expert review.
 
 Product scope: [agritech-learning-brainstorm.md](agritech-learning-brainstorm.md). Phase status: [PLANS.md](PLANS.md).
 
 ## Known limitations
 
-Content is draft, English-only and not expert-reviewed. Live answer quality requires a human smoke test with the configured model; passing mock tests does not establish live accuracy. There are no live reminders, accounts, shared progress, offline caching, full-cycle curriculum, live diagnosis or server-side response storage. Device storage may be unavailable or cleared. Willingness to return is a local self-report; **long-term retention is unproven**.
+Only two fish topics are live; the other three topics and all other subjects are coming soon. Content is draft, English-only and not expert-reviewed. Mock test success does not establish live model accuracy; the human still needs to run the live smoke test. There are no live reminders, accounts, shared progress, offline caching, full-cycle curriculum or live diagnosis. Device storage can be blocked or cleared. Willingness to return is a local self-report: **long-term retention is unproven**.
 
-## Future possibilities
-
-After review and learner validation: additional agricultural topics, locally reviewed translations, voice access, expert support and further inclusive activities. These are future possibilities, not implemented features. Deployment and GitHub push are handled by the human with approval.
+Additional topics, translations and other features need content review and learner validation. Deployment and GitHub push remain human actions requiring approval.

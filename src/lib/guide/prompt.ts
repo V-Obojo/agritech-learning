@@ -1,10 +1,10 @@
 import "server-only";
-import { getLesson, getPathway } from "../content";
+import { resolveTopic } from "../content";
 import type { GuideRequest } from "./types";
 
 export function buildGuidePrompt(request: GuideRequest) {
-  const lesson = getLesson();
-  const pathway = getPathway();
+  const lesson = resolveTopic(request).lesson;
+  const pathway = resolveTopic(request).config;
   return {
     instructions: [
       "You are a learning guide for a beginner in Nigeria.",
@@ -21,6 +21,7 @@ export function buildGuidePrompt(request: GuideRequest) {
       ...lesson.chunks.map((chunk) => `[${chunk.id}] ${chunk.title}\n${chunk.body}`),
     ].join("\n\n"),
     input: JSON.stringify({
+      topicId: request.topicId,
       question: request.question,
       intention: request.intention ?? "curious",
       history: request.history ?? [],

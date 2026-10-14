@@ -3,14 +3,14 @@ import { useState } from "react";
 import { helpResponseSchema } from "@/lib/feedback/types";
 import { postJson } from "./api-client";
 import { recordEvent } from "@/lib/metrics";
-export function StuckHelp({ step }: { step: "lesson" | "guide" | "activity-observe" | "activity-questions" | "activity-fictional" }) {
+export function StuckHelp({ step, topic }: { step: string; topic: { topicId: string; subjectId: string; basePath: string } }) {
   const [result, setResult] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   async function help() {
     setBusy(true); setError("");
-    recordEvent("help_requested", { step });
-    try { setResult((await postJson("/api/help", { step }, helpResponseSchema)).hint); }
+    recordEvent("help_requested", { topicId: topic.topicId, subjectId: topic.subjectId, step });
+    try { setResult((await postJson("/api/help", { topicId: topic.topicId, subjectId: topic.subjectId, step }, helpResponseSchema)).hint); }
     catch { setError("Help could not load. Please try again."); }
     finally { setBusy(false); }
   }

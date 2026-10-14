@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 vi.mock("./openai", () => ({ liveFeedback: vi.fn() }));
-import { getActivity, getLesson, getPathway } from "../content";
+import { getTopic } from "../content";
+const getActivity = () => getTopic("fish-farming", "water").activity;
+const getLesson = () => getTopic("fish-farming", "water").lesson;
+const getPathway = () => getTopic("fish-farming", "water").config;
 import { giveFeedback, postValidateFeedback } from "./index";
 import { analyzeCoverage, isTooShort, mockFeedback } from "./mock";
 import { liveFeedback } from "./openai";
@@ -9,9 +12,9 @@ import { feedbackResponseSchema, type FeedbackRequest } from "./types";
 
 const fictional = "Amina's well gets low in the dry season. She needs to find out about testing the water.";
 const examples: FeedbackRequest[] = [
-  { pathId: "observe", response: getActivity().paths[0].example! },
-  { pathId: "questions", response: getActivity().paths[1].example! },
-  { pathId: "fictional", response: fictional },
+  { topicId: "water", pathId: "observe", response: getActivity().paths[0].example! },
+  { topicId: "water", pathId: "questions", response: getActivity().paths[1].example! },
+  { topicId: "water", pathId: "fictional", response: fictional },
 ];
 beforeEach(() => vi.stubGlobal("fetch", vi.fn(() => { throw new Error("No network in tests"); })));
 afterEach(() => { vi.unstubAllGlobals(); vi.clearAllMocks(); });
@@ -45,7 +48,7 @@ describe("activity feedback", () => {
     expect(result.toConsider[0].message).toContain(getActivity().paths[2].modelPoints![1].point);
   });
   it.each(["observe", "questions", "fictional"] as const)("returns the authored %s hint for idk", async (pathId) => {
-    const result = await giveFeedback({ pathId, response: "idk" });
+    const result = await giveFeedback({ topicId: "water", pathId, response: "idk" });
     expect(result).toMatchObject({ completed: false, strengths: [], toConsider: [],
       hint: getPathway().stuckHints[`activity-${pathId}`], mode: "mock" });
   });
@@ -84,20 +87,20 @@ describe("activity feedback", () => {
     expect(postValidateFeedback(value, examples[0], "live").nextStep.id).toBe("testing");
   });
   it("overrides model completion for short answers with the authored hint", () => {
-    const result = postValidateFeedback(mockFeedback(examples[0]), { pathId: "fictional", response: "idk" }, "live");
+    const result = postValidateFeedback(mockFeedback(examples[0]), { topicId: "water", pathId: "fictional", response: "idk" }, "live");
     expect(result.completed).toBe(false);
     expect(result.strengths).toEqual([]);
     expect(result.toConsider).toEqual([]);
     expect(result.hint).toBe(getPathway().stuckHints["activity-fictional"]);
   });
   it("offers authored help when no rubric criteria are matched", async () => {
-    const result = await giveFeedback({ pathId: "observe", response: "abcdefghijklmnopqrstuvwxyz" });
+    const result = await giveFeedback({ topicId: "water", pathId: "observe", response: "abcdefghijklmnopqrstuvwxyz" });
     expect(result.completed).toBe(false);
     expect(result.hint).toBe(getPathway().stuckHints["activity-observe"]);
   });
   it("keeps reflection available when all rubric criteria are covered", () => {
     const response = "well dry season tested pump shared unknown ask extension?";
-    const result = mockFeedback({ pathId: "observe", response });
+    const result = mockFeedback({ topicId: "water", pathId: "observe", response });
     expect(result.strengths).toHaveLength(1);
     expect(result.toConsider).toHaveLength(1);
   });

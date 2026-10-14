@@ -3,7 +3,9 @@ import { guideResponseSchema } from "../guide/types";
 
 const text = z.string().trim().min(1);
 export const feedbackRequestSchema = z.object({
-  pathId: z.enum(["observe", "questions", "fictional"]),
+  topicId: text,
+  subjectId: text.optional(),
+  pathId: text,
   response: text.max(2000),
   intention: z.string().optional(),
 });
@@ -33,7 +35,9 @@ export const feedbackResponseSchema = z.object({
   }
 });
 export const helpRequestSchema = z.object({
-  step: z.enum(["lesson", "activity-observe", "activity-questions", "activity-fictional", "guide"]),
+  topicId: text,
+  subjectId: text.optional(),
+  step: text,
   question: text.max(500).optional(),
 });
 export const helpResponseSchema = z.object({

@@ -1,5 +1,5 @@
 import "server-only";
-import { getActivity, getLesson, getPathway } from "../content";
+import { resolveTopic, InvalidTopicError } from "../content";
 import type { GuideMode } from "../guide/types";
 import { defaultNextStepId, isTooShort, mockFeedback } from "./mock";
 import { liveFeedback } from "./openai";
@@ -8,9 +8,9 @@ import { feedbackRequestSchema, feedbackResponseSchema, modelFeedbackOutputSchem
 
 export function postValidateFeedback(value: unknown, request: FeedbackRequest, mode: GuideMode): FeedbackResponse {
   const output = modelFeedbackOutputSchema.parse(value);
-  const activity = getActivity();
-  const pathway = getPathway();
-  const chunkIds = new Set(getLesson().chunks.map((chunk) => chunk.id));
+  const activity = resolveTopic(request).activity;
+  const pathway = resolveTopic(request).config;
+  const chunkIds = new Set(resolveTopic(request).lesson.chunks.map((chunk) => chunk.id));
   function validateEntries(entries: FeedbackEntry[]) {
     return entries.flatMap((entry) => {
       if (!activity.rubric.some((criterion) => criterion.id === entry.criterionId)) return [];
@@ -25,7 +25,7 @@ export function postValidateFeedback(value: unknown, request: FeedbackRequest, m
     return postValidateFeedback(mockFeedback(request), request, "mock-fallback");
   }
   const nextStep = pathway.nextSteps.find((step) => step.id === output.nextStepId)
-    ?? pathway.nextSteps.find((step) => step.id === defaultNextStepId(request.intention));
+    ?? pathway.nextSteps.find((step) => step.id === defaultNextStepId(request));
   if (!nextStep) throw new Error("Content feedback next step is missing");
   return feedbackResponseSchema.parse({ completed, strengths, toConsider,
     nextStep: { id: nextStep.id, label: nextStep.label }, mode,
@@ -35,6 +35,7 @@ export function postValidateFeedback(value: unknown, request: FeedbackRequest, m
 
 export async function giveFeedback(request: FeedbackRequest): Promise<FeedbackResponse> {
   const validated = feedbackRequestSchema.parse(request);
+  if (!resolveTopic(validated).activity.paths.some(path => path.id === validated.pathId)) throw new InvalidTopicError("Unknown activity path");
   if (isTooShort(validated.response)) return postValidateFeedback(mockFeedback(validated), validated, "mock");
   if (process.env.GUIDE_MODE === "live" && process.env.OPENAI_API_KEY) {
     try {

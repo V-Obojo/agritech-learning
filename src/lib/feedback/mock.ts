@@ -1,5 +1,5 @@
 import "server-only";
-import { getActivity } from "../content";
+import { resolveTopic } from "../content";
 import type { FeedbackEntry, FeedbackRequest, ModelFeedbackOutput } from "./types";
 
 export function isTooShort(response: string): boolean {
@@ -7,12 +7,13 @@ export function isTooShort(response: string): boolean {
   return (response.match(/[\p{L}\p{N}]/gu) ?? []).length < 20;
 }
 
-export function defaultNextStepId(intention?: string): string {
-  return intention === "considering" ? "dry-season-check" : "talk-farmer";
+export function defaultNextStepId(request: FeedbackRequest): string {
+  const defaults = resolveTopic(request).config.defaultNextStep;
+  return defaults[request.intention ?? ""] ?? defaults.default;
 }
 
 export function analyzeCoverage(request: FeedbackRequest) {
-  const activity = getActivity();
+  const activity = resolveTopic(request).activity;
   const response = request.response.toLowerCase();
   const coveredCriteria = activity.rubric.filter((criterion) => criterion.keywords.some((keyword) => {
     if (keyword === "?") return response.includes("?");
@@ -21,8 +22,7 @@ export function analyzeCoverage(request: FeedbackRequest) {
     return new RegExp(`\\b${escaped}${suffix}\\b`, "i").test(response);
   }));
   const coveredIds = new Set(coveredCriteria.map((criterion) => criterion.id));
-  const modelPoints = request.pathId === "fictional"
-    ? activity.paths.find((path) => path.id === "fictional")?.modelPoints ?? [] : [];
+  const modelPoints = activity.paths.find(path => path.id === request.pathId)?.modelPoints ?? [];
   return {
     coveredCriteria,
     unmatchedCriteria: activity.rubric.filter((criterion) => !coveredIds.has(criterion.id)),
@@ -33,7 +33,7 @@ export function analyzeCoverage(request: FeedbackRequest) {
 
 export function mockFeedback(request: FeedbackRequest): ModelFeedbackOutput {
   const coverage = analyzeCoverage(request);
-  const nextStepId = defaultNextStepId(request.intention);
+  const nextStepId = defaultNextStepId(request);
   const strength = coverage.coveredCriteria[0];
   if (isTooShort(request.response) || !strength) {
     return { completed: false, strengths: [], toConsider: [], nextStepId };
@@ -42,7 +42,7 @@ export function mockFeedback(request: FeedbackRequest): ModelFeedbackOutput {
   const modelPoint = coverage.uncoveredModelPoints[0];
   if (modelPoint) {
     toConsider.push({ criterionId: modelPoint.criterion,
-      message: `What might this mean for Amina: "${modelPoint.point}"?`,
+      message: `What might this mean for the situation: "${modelPoint.point}"?`,
       chunkIds: modelPoint.chunks });
   }
   for (const criterion of coverage.unmatchedCriteria) {
@@ -53,7 +53,7 @@ export function mockFeedback(request: FeedbackRequest): ModelFeedbackOutput {
       chunkIds: criterion.chunks });
   }
   if (!toConsider.length) {
-    const criterion = getActivity().rubric.find((criterion) => criterion.id === "open-questions")!;
+    const criterion = coverage.coveredCriteria.at(-1)!;
     toConsider.push({ criterionId: criterion.id,
       message: `What else would you like to find out about this: "${criterion.description}"?`,
       chunkIds: criterion.chunks });

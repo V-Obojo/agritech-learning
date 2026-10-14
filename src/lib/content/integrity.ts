@@ -1,54 +1,46 @@
-import { getActivity, getLesson, getPathway, getSources } from "./index";
-import type { Activity, Lesson, Pathway, Sources } from "./schemas";
-
-export interface ContentIntegrityInput {
-  sources: Sources;
-  lesson: Lesson;
-  activity: Activity;
-  pathway: Pathway;
-}
-
+import { getCatalog, getSources, getSubjectPath, getTopic } from "./index";
+import type { Catalog, Sources, Topic } from "./schemas";
+export interface ContentIntegrityInput { catalog: Catalog; sources: Sources; topics: Topic[] }
 export function checkContentIntegrity(input?: ContentIntegrityInput): string[] {
-  const { sources, lesson, activity, pathway } = input ?? {
-    sources: getSources(), lesson: getLesson(), activity: getActivity(), pathway: getPathway(),
-  };
   const problems: string[] = [];
-  const sourceIds = new Set(sources.sources.map((source) => source.id));
-  const chunkIds = new Set<string>();
-  for (const chunk of lesson.chunks) {
-    if (chunkIds.has(chunk.id)) problems.push(`Duplicate chunk id: ${chunk.id}`);
-    chunkIds.add(chunk.id);
-    if (!chunk.sourceIds.length) problems.push(`Chunk ${chunk.id} has no sources`);
-    for (const sourceId of chunk.sourceIds) {
-      if (!sourceIds.has(sourceId)) problems.push(`Chunk ${chunk.id} references unknown source id: ${sourceId}`);
+  const catalog = input?.catalog ?? getCatalog();
+  const sources = input?.sources ?? getSources();
+  for (const area of catalog.areas) for (const subject of area.subjects) if (subject.status === "live" && !subject.path) problems.push(`Live subject ${subject.id} has no path`);
+  const topics = input?.topics ?? catalog.areas.filter(area => area.status === "live").flatMap(area => area.subjects.filter(subject => subject.status === "live" && subject.path).flatMap(subject => {
+    try {
+      return getSubjectPath(subject.id).topics.filter(meta => meta.status === "live").flatMap(meta => {
+        try { return [getTopic(subject.id, meta.id)]; }
+        catch (error) { problems.push(String(error)); return []; }
+      });
+    } catch (error) { problems.push(String(error)); return []; }
+  }));
+  const sourceIds = new Set(sources.sources.map(source => source.id));
+  const allIds = new Set<string>();
+  const prefixes = [...new Set(topics.flatMap(topic => topic.lesson.chunks.map(chunk => chunk.id.replace(/\d+$/, ""))))];
+  const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const tokenPattern = prefixes.length ? new RegExp(`\\b(?:${prefixes.map(escape).join("|")})\\d+\\b`, "g") : null;
+  for (const {lesson, config, activity} of topics) {
+    const ids = new Set(lesson.chunks.map(chunk => chunk.id));
+    for (const chunk of lesson.chunks) {
+      if (allIds.has(chunk.id)) problems.push(`Duplicate chunk id: ${chunk.id}`);
+      allIds.add(chunk.id);
+      if (!chunk.sourceIds.length) problems.push(`Chunk ${chunk.id} has no sources`);
+      for (const id of chunk.sourceIds) if (!sourceIds.has(id)) problems.push(`Chunk ${chunk.id} references unknown source id: ${id}`);
     }
-  }
-  function checkReferences(value: unknown, location: string) {
-    if (Array.isArray(value)) {
-      value.forEach((item, index) => checkReferences(item, `${location}[${index}]`));
-    } else if (value && typeof value === "object") {
-      for (const [key, child] of Object.entries(value)) {
-        if (key === "chunk" || key === "chunks") {
-          const ids: unknown[] = Array.isArray(child) ? child : [child];
-          for (const id of ids) {
-            if (typeof id !== "string" || !chunkIds.has(id)) {
-              problems.push(`${location}.${key} references unknown chunk: ${String(id)}`);
-            }
-          }
-        } else checkReferences(child, `${location}.${key}`);
+    function references(value: unknown, location: string) {
+      if (Array.isArray(value)) value.forEach((child, i) => references(child, `${location}[${i}]`));
+      else if (value && typeof value === "object") for (const [key, child] of Object.entries(value)) {
+        if (key === "chunk" || key === "chunks") for (const id of Array.isArray(child) ? child : [child]) {
+          if (!ids.has(id)) problems.push(`${location}.${key} references unknown chunk: ${id}`);
+        } else references(child, `${location}.${key}`);
       }
     }
-  }
-  checkReferences(activity, "activity");
-  checkReferences(pathway, "pathway");
-  // Authored hints also cite wa-NN ids inside their prose.
-  for (const [hintId, hint] of Object.entries(pathway.stuckHints)) {
-    for (const id of hint.match(/\bwa-\d+\b/g) ?? []) {
-      if (!chunkIds.has(id)) problems.push(`pathway.stuckHints.${hintId} references unknown chunk: ${id}`);
-    }
-  }
-  if (!pathway.nextSteps.some((step) => step.id === pathway.unsupportedFallback.nextStep)) {
-    problems.push(`unsupportedFallback.nextStep references unknown next step: ${pathway.unsupportedFallback.nextStep}`);
+    references(config, "topic"); references(activity, "activity");
+    for (const [key, hint] of Object.entries(config.stuckHints)) for (const id of tokenPattern ? hint.match(tokenPattern) ?? [] : []) if (!ids.has(id)) problems.push(`topic.stuckHints.${key} references unknown chunk: ${id}`);
+    for (const id of [config.unsupportedFallback.nextStep, ...Object.values(config.defaultNextStep)]) if (!config.nextSteps.some(step => step.id === id)) problems.push(`Unknown next step: ${id}`);
+    if (!config.defaultNextStep.default) problems.push(`Missing default next step: ${lesson.id}`);
+    for (const path of activity.paths) if (!config.stuckHints[`activity-${path.id}`]) problems.push(`Missing stuck hint: activity-${path.id}`);
+    for (const path of activity.paths) for (const point of path.modelPoints ?? []) if (!activity.rubric.some(criterion => criterion.id === point.criterion)) problems.push(`Unknown model-point criterion: ${point.criterion}`);
   }
   return problems;
 }

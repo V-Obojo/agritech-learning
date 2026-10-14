@@ -1,3 +1,4 @@
+import { resolveTopic, InvalidTopicError } from "@/lib/content";
 import { answerQuestion } from "@/lib/guide";
 import { guideRequestSchema } from "@/lib/guide/types";
 
@@ -14,8 +15,10 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid guide request" }, { status: 400 });
   }
   try {
+    resolveTopic(parsed.data);
     return Response.json(await answerQuestion(parsed.data));
-  } catch {
+  } catch (error) {
+    if (error instanceof InvalidTopicError) return Response.json({ error: error.message }, { status: 400 });
     return Response.json({ error: "The guide is temporarily unavailable" }, { status: 500 });
   }
 }
